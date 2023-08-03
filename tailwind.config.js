@@ -2,12 +2,16 @@
 module.exports = {
   darkMode: ["class"],
   content: [
-    './pages/**/*.{ts,tsx}',
-    './components/**/*.{ts,tsx}',
-    './app/**/*.{ts,tsx}',
-    './src/**/*.{ts,tsx}',
-	],
+    "./pages/**/*.{ts,tsx}",
+    "./components/**/*.{ts,tsx}",
+    "./app/**/*.{ts,tsx}",
+    "./src/**/*.{ts,tsx}",
+  ],
   theme: {
+    fontFamily: {
+      archivo: ['Archivo', 'sans-serif'],
+      inter: ['Inter', 'sans-serif'],
+    },
     container: {
       center: true,
       padding: "2rem",
@@ -20,15 +24,22 @@ module.exports = {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
-        background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
+        background: {
+          DEFAULT: "hsl(var(--background))",
+          darkened: "hsl(var(--background-darkened))",
+        },
         primary: {
           DEFAULT: "hsl(var(--primary))",
-          foreground: "hsl(var(--primary-foreground))",
+          darkened: "hsl(var(--primary-darkened))",
         },
         secondary: {
           DEFAULT: "hsl(var(--secondary))",
-          foreground: "hsl(var(--secondary-foreground))",
+          darkened: "hsl(var(--secondary-darkened))",
+        },
+        tertiary: {
+          DEFAULT: "hsl(var(--tertiary))",
+          darkened: "hsl(var(--secondary-darkened))",
         },
         destructive: {
           DEFAULT: "hsl(var(--destructive))",
@@ -73,4 +84,4 @@ module.exports = {
     },
   },
   plugins: [require("tailwindcss-animate")],
-}
+};
