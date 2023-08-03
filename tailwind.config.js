@@ -9,8 +9,8 @@ module.exports = {
   ],
   theme: {
     fontFamily: {
-      archivo: ['Archivo', 'sans-serif'],
-      inter: ['Inter', 'sans-serif'],
+      'inter-ff': "var(--inter-ff)",
+      'archive-ff': "var(--archive-ff)"
     },
     container: {
       center: true,
