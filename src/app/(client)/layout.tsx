@@ -13,7 +13,7 @@ export default function ClientLayout({ children }: ClientLayoutProps) {
     <div className="w-full">
       <SideBar />
       <Topbar />
-      {children}
+      <div className="ml-20 mt-20">{children}</div>
     </div>
   );
 }

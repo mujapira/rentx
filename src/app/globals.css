@@ -5,7 +5,7 @@
 @layer base {
   :root {
     --primary: 240 7% 11%;
-    --primary-darkened: 147 96% 28%;
+    --primary-darkened: 0 0% 0%;
 
     --secondary: 350 82% 47%;
     --secondary-darkened: 350 82% 38%;
