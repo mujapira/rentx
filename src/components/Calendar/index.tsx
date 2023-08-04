@@ -1,10 +1,6 @@
-// import { useQuery } from '@tanstack/react-query'
 import dayjs from "dayjs";
 import { archivo } from "../../styles/fonts";
-import { useRouter } from "next/router";
-// import { CaretLeft, CaretRight } from "phosphor-react";
 import { useMemo, useState } from "react";
-// import { api } from '../../lib/axios'
 import { getWeekDays } from "../../utils";
 import { RiArrowRightSLine, RiArrowLeftSLine } from "react-icons/ri";
 interface CalendarWeek {
@@ -23,7 +19,7 @@ interface BlockedDates {
 }
 
 interface CalendarProps {
-  selectedDate: Date | null;
+  selectedDate: Date[] | Date | null;
   onDateSelected: (date: Date) => void;
 }
 
@@ -67,12 +63,16 @@ export function Calendar({ selectedDate, onDateSelected }: CalendarProps) {
   //   },
   // )
 
-  //  const blockedDates:BlockedDates = {[]}
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const blockedDates: BlockedDates = {
+    blockedWeekDays: [0], // Domingo (0) bloqueado
+    blockedDates: [15, 16, 22, 23], // Exemplo de dias bloqueados
+  };
 
   const calendarWeeks = useMemo(() => {
-    // if (!blockedDates) {
-    //   return [];
-    // }
+    if (!blockedDates) {
+      return [];
+    }
 
     const daysInMonthArray = Array.from({
       length: currentDate.daysInMonth(),
@@ -106,9 +106,10 @@ export function Calendar({ selectedDate, onDateSelected }: CalendarProps) {
       ...daysInMonthArray.map((date) => {
         return {
           date,
-          disabled: date.endOf("day").isBefore(new Date()),
-          // || blockedDates.blockedWeekDays.includes(date.get("day")) ||
-          // blockedDates.blockedDates.includes(date.get("date")),
+          disabled:
+            date.endOf("day").isBefore(new Date()) ||
+            blockedDates.blockedWeekDays.includes(date.get("day")) ||
+            blockedDates.blockedDates.includes(date.get("date")),
         };
       }),
       ...nextMonthFillArray.map((date) => {
@@ -130,11 +131,27 @@ export function Calendar({ selectedDate, onDateSelected }: CalendarProps) {
     }, []);
 
     return calendarWeeks;
-  }, [
-    currentDate,
-    // ,blockedDates
-  ]);
+  }, [currentDate, blockedDates]);
 
+  const [startDate, setStartDate] = useState<Date | null>(null);
+  const [endDate, setEndDate] = useState<Date | null>(null);
+
+  function handleSelectDate(date: Date) {
+    if (!startDate) {
+      setStartDate(date);
+      setEndDate(null);
+    } else if (startDate && !endDate && date >= startDate) {
+      // Se a data inicial foi selecionada e a data final ainda não foi, e a data selecionada é maior ou igual à data inicial
+      setEndDate(date);
+    } else {
+      // Se a data final foi selecionada ou a data selecionada é menor que a data inicial, selecionamos uma nova data inicial
+      setStartDate(date);
+      setEndDate(null);
+    }
+    onDateSelected(date);
+  }
+
+  console.log(startDate, endDate);
   return (
     <div className="flex flex-col max-w-4xl gap-6 p-6 bg-background">
       <div className="max-w-[400px]">
@@ -180,18 +197,28 @@ export function Calendar({ selectedDate, onDateSelected }: CalendarProps) {
               return (
                 <tr key={week}>
                   {days.map(({ date, disabled }) => {
+                    const isStartDate =
+                      startDate && date.toDate().getTime() === startDate.getTime();
+                    const isEndDate = endDate && date.toDate().getTime() === endDate.getTime();
+                    const isInRange =
+                      startDate && endDate && date.toDate() > startDate && date.toDate() < endDate;
+
                     return (
                       <td key={date.toString()} className="p-0">
                         <button
-                          onClick={() => onDateSelected(date.toDate())}
+                          onClick={() => handleSelectDate(date.toDate())}
                           className={`all:unset text-center cursor-pointer w-[56px] h-[56px]
                         ${
                           disabled
                             ? "bg-none cursor-default opacity-40"
+                            : isInRange
+                            ? "bg-[#FDEDEF] text-secondary"
+                            : isStartDate || isEndDate
+                            ? " bg-secondary  text-background"
                             : "bg-background text-[#47474D]"
-                        } 
+                        }
                         ${
-                          !disabled && "hover:bg-secondary hover:text-background"
+                          !disabled && !isInRange && "hover:bg-secondary hover:text-background"
                         } focus:shadow-outline-gray-100`}
                           disabled={disabled}
                         >
@@ -205,6 +232,27 @@ export function Calendar({ selectedDate, onDateSelected }: CalendarProps) {
             })}
           </tbody>
         </table>
+      </div>
+      <div>
+        {startDate && (
+          <p>
+            DE{" "}
+            {startDate.toLocaleString("pt-BR", {
+              day: "numeric",
+              month: "long",
+            })}
+          </p>
+        )}
+
+        {endDate && (
+          <p>
+            ATÉ{" "}
+            {endDate.toLocaleString("pt-BR", {
+              day: "numeric",
+              month: "long",
+            })}
+          </p>
+        )}
       </div>
     </div>
   );
