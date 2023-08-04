@@ -9,8 +9,8 @@ module.exports = {
   ],
   theme: {
     fontFamily: {
-      'inter-ff': "var(--inter-ff)",
-      'archive-ff': "var(--archive-ff)"
+      "inter-ff": "var(--inter-ff)",
+      "archive-ff": "var(--archive-ff)",
     },
     container: {
       center: true,
@@ -21,6 +21,12 @@ module.exports = {
     },
     extend: {
       colors: {
+        text: {
+          DEFAULT: "hsl(var(--text))",
+          details: "hsl(var(--text-details))",
+          label: "hsl(var(--text-label))",
+          secondary: "hsl(var(--text-secondary))",
+        },
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
