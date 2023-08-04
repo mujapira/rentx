@@ -137,65 +137,75 @@ export function Calendar({ selectedDate, onDateSelected }: CalendarProps) {
 
   return (
     <div className="flex flex-col max-w-4xl gap-6 p-6 bg-background">
-      <div className="flex items-center justify-between">
-        <div className="flex items-center justify-center gap-2">
-          <button
-            onClick={handlePreviousMonth}
-            title="Previous month"
-            className="flex items-center justify-center"
-          >
-            <RiArrowLeftSLine size={22} color="#7A7A80" />
-          </button>
+      <div className="max-w-[400px]">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center justify-between w-full gap-2">
+            <button
+              onClick={handlePreviousMonth}
+              title="Previous month"
+              className="flex items-center justify-center"
+            >
+              <RiArrowLeftSLine size={22} color="#7A7A80" />
+            </button>
 
-          <h1
-            className={`${archivo.className} font-semibold capitalize text-heading text-2xl heading-[30px]`}
-          >
-            {currentMonth} <span>{currentYear}</span>
-          </h1>
-          <button
-            onClick={handleNextMonth}
-            title="Next month"
-            className="flex items-center justify-center"
-          >
-            <RiArrowRightSLine size={22} color="#7A7A80" />
-          </button>
+            <h1
+              className={`${archivo.className} font-semibold capitalize text-heading text-2xl heading-[30px]`}
+            >
+              {currentMonth} <span>{currentYear}</span>
+            </h1>
+            <button
+              onClick={handleNextMonth}
+              title="Next month"
+              className="flex items-center justify-center"
+            >
+              <RiArrowRightSLine size={22} color="#7A7A80" />
+            </button>
+          </div>
         </div>
+        <table className="w-full">
+          <thead>
+            <tr className="border-b">
+              {shortWeekDays.map((weekDay) => (
+                <th
+                  className="text-[#AEAEB3] font-semibold text-sm aspect-square py-4"
+                  key={weekDay}
+                >
+                  {weekDay}
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {calendarWeeks.map(({ week, days }) => {
+              return (
+                <tr key={week}>
+                  {days.map(({ date, disabled }) => {
+                    return (
+                      <td key={date.toString()} className="p-0">
+                        <button
+                          onClick={() => onDateSelected(date.toDate())}
+                          className={`all:unset text-center cursor-pointer w-[56px] h-[56px]
+                        ${
+                          disabled
+                            ? "bg-none cursor-default opacity-40"
+                            : "bg-background text-[#47474D]"
+                        } 
+                        ${
+                          !disabled && "hover:bg-secondary hover:text-background"
+                        } focus:shadow-outline-gray-100`}
+                          disabled={disabled}
+                        >
+                          {date.get("date")}
+                        </button>
+                      </td>
+                    );
+                  })}
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
       </div>
-      <table className="w-full font-default border-spacing-0.25rem table-fixed">
-        <thead>
-          <tr className="border-b">
-            {shortWeekDays.map((weekDay) => (
-              <th className="text-[#AEAEB3] font-semibold text-sm py-4 aspect-square max-w-[56px] w-full" key={weekDay}>
-                {weekDay}
-              </th>
-            ))}
-          </tr>
-        </thead>
-        <div className="pt-8"></div>
-        <tbody>
-          {calendarWeeks.map(({ week, days }) => {
-            return (
-              <tr key={week}>
-                {days.map(({ date, disabled }) => {
-                  return (
-                    <td key={date.toString()}>
-                      <button
-                        onClick={() => onDateSelected(date.toDate())}
-                        className={`all:unset w-full text-center cursor-pointer aspect-square max-w-[56px]
-                        ${disabled ? "bg-none cursor-default opacity-40" : "bg-background text-[#47474D]"} 
-                        ${!disabled && "hover:bg-secondary hover:text-background"} focus:shadow-outline-gray-100`}
-                        disabled={disabled}
-                      >
-                        {date.get("date")}
-                      </button>
-                    </td>
-                  );
-                })}
-              </tr>
-            );
-          })}
-        </tbody>
-      </table>
     </div>
   );
 }
