@@ -21,30 +21,33 @@ export function SideBar() {
       <div className="flex flex-col my-auto">
         <Link
           href="/inicio"
-          className={`flex items-center justify-center h-14 bg-primary-${
+          className={`flex items-center justify-center h-14 ${
             pathname == "/inicio"
-              ? "darkened border-l border-secondary"
-              : "primary hover:border-l border-secondary cursor-pointer"
+              ? "bg-primary-darkened border-l border-secondary"
+              : "bg-primary-primary hover:border-l border-secondary cursor-pointer"
           }`}
         >
           <RiHome2Line color="#FFF" size="22px" />
         </Link>
         <Link
           href="/carros"
-          className={`flex items-center justify-center h-14 bg-primary-${
+          className={`flex items-center justify-center h-14 ${
             pathname == "/carros"
-              ? "darkened border-l border-secondary"
-              : "primary hover:border-l border-secondary cursor-pointer"
+              ? "bg-primary-darkened border-l border-secondary"
+              : "bg-primary-primary hover:border-l border-secondary cursor-pointer"
           }`}
         >
           <RiCarLine color="#FFF" size="22px" />
         </Link>
         <Link
           href="/perfil"
-          className={`flex items-center justify-center h-14 bg-primary-${
-            pathname == "/perfil"
-              ? "darkened border-l border-secondary"
-              : "primary hover:border-l border-secondary cursor-pointer"
+          className={`flex items-center justify-center h-14 ${
+            pathname == "/perfil" ||
+            pathname == "/login" ||
+            pathname == "/cadastrar" ||
+            pathname == "/esqueci-minha-senha"
+              ? "bg-primary-darkened border-l border-secondary"
+              : "bg-primary-primary hover:border-l border-secondary cursor-pointer"
           }`}
         >
           <RiUser6Line color="#FFF" size="22px" />
