@@ -4,17 +4,24 @@
 
 @layer base {
   :root {
+    --heading-primary: 240 4% 29%;
+
     --primary: 240 7% 11%;
     --primary-darkened: 0 0% 0%;
-
+    
     --secondary: 350 82% 47%;
     --secondary-darkened: 350 82% 38%;
-
+    
     --tertiary: 147 97% 35%;
     --tertiary-darkened: 147 96% 28%;
-
+    
     --background: 0 0% 100%;
     --background-darkened: 210 10% 96%;
+    
+    --text: 240 2% 49%;
+    --text-details: 240 3% 69%;
+    --text-label: 240 8% 88%;
+    --text-secondary: 240 14% 93%;
 
     --foreground: 222.2 84% 4.9%;
     --muted: 210 40% 96.1%;
