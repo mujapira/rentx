@@ -28,6 +28,11 @@ export function Calendar({ selectedDate, onDateSelected }: CalendarProps) {
     return dayjs().set("date", 1);
   });
 
+
+  function handleConfirm(){
+    console.log('confirm')
+  }
+
   //   const router = useRouter();
 
   function handlePreviousMonth() {
@@ -66,7 +71,7 @@ export function Calendar({ selectedDate, onDateSelected }: CalendarProps) {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const blockedDates: BlockedDates = {
     blockedWeekDays: [0], // Domingo (0) bloqueado
-    blockedDates: [15, 16, 22, 23], // Exemplo de dias bloqueados
+    blockedDates: [15], // Exemplo de dias bloqueados
   };
 
   const calendarWeeks = useMemo(() => {
@@ -151,10 +156,9 @@ export function Calendar({ selectedDate, onDateSelected }: CalendarProps) {
     onDateSelected(date);
   }
 
-  console.log(startDate, endDate);
   return (
-    <div className="flex flex-col max-w-4xl gap-6 p-6 bg-background">
-      <div className="max-w-[400px]">
+    <div className="flex flex-col justify-around max-w-4xl gap-8 p-1 mx-auto lg:gap0 lg:p-12 lg:flex-row bg-background">
+      <div className="max-w-[400px] mx-auto lg:mx-0">
         <div className="flex items-center justify-between">
           <div className="flex items-center justify-between w-full gap-2">
             <button
@@ -183,10 +187,7 @@ export function Calendar({ selectedDate, onDateSelected }: CalendarProps) {
           <thead>
             <tr className="border-b">
               {shortWeekDays.map((weekDay) => (
-                <th
-                  className="text-[#AEAEB3] font-semibold text-sm aspect-square py-4"
-                  key={weekDay}
-                >
+                <th className="text-[#AEAEB3] font-semibold text-sm py-4" key={weekDay}>
                   {weekDay}
                 </th>
               ))}
@@ -207,10 +208,10 @@ export function Calendar({ selectedDate, onDateSelected }: CalendarProps) {
                       <td key={date.toString()} className="p-0">
                         <button
                           onClick={() => handleSelectDate(date.toDate())}
-                          className={`all:unset text-center cursor-pointer w-[56px] h-[56px]
+                          className={`all:unset text-center cursor-pointer max-[400px]:w-12 max-[400px]:h-12 w-14 h-14
                         ${
                           disabled
-                            ? "bg-none cursor-default opacity-40"
+                            ? "bg-none cursor-not-allowed opacity-40"
                             : isInRange
                             ? "bg-[#FDEDEF] text-secondary"
                             : isStartDate || isEndDate
@@ -233,26 +234,46 @@ export function Calendar({ selectedDate, onDateSelected }: CalendarProps) {
           </tbody>
         </table>
       </div>
-      <div>
-        {startDate && (
-          <p>
-            DE{" "}
-            {startDate.toLocaleString("pt-BR", {
-              day: "numeric",
-              month: "long",
-            })}
-          </p>
-        )}
 
-        {endDate && (
-          <p>
-            ATÉ{" "}
-            {endDate.toLocaleString("pt-BR", {
-              day: "numeric",
-              month: "long",
-            })}
-          </p>
-        )}
+      <div className="flex flex-col items-center w-full lg:items-start lg:w-auto justify-between gap-8 lg:gap-0 max-w-[400px] mx-auto lg:mx-0">
+        <div className="flex flex-row justify-between w-full gap-0 px-4 lg:gap-12 lg:px-0 lg:flex-col">
+          <div className="flex flex-col gap-1 min-w-[150px] w-min lg:w-full">
+            <span className={`${archivo.className} capitalize text-text-details text-sm`}>DE</span>
+            {startDate ? (
+              <span className="text-lg font-semibold lg:text-3xl text-heading">
+                {startDate.toLocaleString("pt-BR", {
+                  day: "numeric",
+                  month: "long",
+                })}
+              </span>
+            ) : (
+              <hr className="mt-9" />
+            )}
+          </div>
+
+          <div className="flex flex-col gap-1 min-w-[150px] w-min lg:w-full">
+            <span className={`${archivo.className} capitalize text-text-details text-sm`}>ATÉ</span>
+            {endDate ? (
+              <span className="text-lg font-semibold lg:text-3xl text-heading">
+                {endDate.toLocaleString("pt-BR", {
+                  day: "numeric",
+                  month: "long",
+                })}
+              </span>
+            ) : (
+              <hr className="mt-9" />
+            )}
+          </div>
+        </div>
+     
+          <button
+            onClick={handleConfirm}
+            disabled={!startDate || !endDate}
+            className="flex items-center justify-center w-full px-20 py-4 text-lg font-medium text-center duration-300 disabled:cursor-not-allowed disabled:opacity-70 lg:w-auto bg-secondary text-background hover:bg-secondary-darkened hover:transition-all"
+          >
+            Confirmar
+          </button>
+       
       </div>
     </div>
   );
