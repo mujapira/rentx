@@ -26,6 +26,7 @@ export function SideBar() {
               ? "bg-primary-darkened border-l border-secondary"
               : "bg-primary-primary hover:border-l border-secondary cursor-pointer"
           }`}
+          prefetch
         >
           <RiHome2Line color="#FFF" size="22px" />
         </Link>
@@ -36,6 +37,7 @@ export function SideBar() {
               ? "bg-primary-darkened border-l border-secondary"
               : "bg-primary-primary hover:border-l border-secondary cursor-pointer"
           }`}
+          prefetch
         >
           <RiCarLine color="#FFF" size="22px" />
         </Link>
@@ -49,6 +51,7 @@ export function SideBar() {
               ? "bg-primary-darkened border-l border-secondary"
               : "bg-primary-primary hover:border-l border-secondary cursor-pointer"
           }`}
+          prefetch
         >
           <RiUser6Line color="#FFF" size="22px" />
         </Link>
