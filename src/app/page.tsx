@@ -26,8 +26,13 @@ export default function Home() {
           <br />
           seguro, com conforto e segurança.
         </span>
-      
-        <Link href="/inicio" className="flex items-center justify-center px-20 py-6 mt-16 text-lg font-medium text-center duration-300 bg-secondary text-background hover:bg-secondary-darkened hover:transition-all">Começar agora</Link>
+
+        <Link
+          href="/inicio"
+          className="flex items-center justify-center px-20 py-6 mt-16 text-lg font-medium text-center duration-300 bg-secondary text-background hover:bg-secondary-darkened hover:transition-all"
+        >
+          Começar agora
+        </Link>
       </div>
 
       <div className="relative w-full h-[613px] max-w-2xl hidden xl:flex">

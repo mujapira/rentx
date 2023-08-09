@@ -1,14 +1,27 @@
-import React from "react";
+"use client";
+
+import { FormEvent, useState } from "react";
 import Image from "next/image";
 import LoginPageCar from "../../../assets/login-page-car.png";
 import LoginPageFrames from "../../../assets/login-page-frames.png";
 import { archivo } from "@/styles/fonts";
 import Link from "next/link";
+import { RiLock2Line, RiMailLine } from "react-icons/ri";
+import { PrimaryButton } from "@/components/PrimaryButton";
 
 export default function Login() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  function handleSubmit(event: FormEvent) {
+    event.preventDefault();
+
+    alert("Login efetuado com sucesso!");
+  }
+
   return (
-    <main className="flex items-center justify-center min-h-screen px-2 xl:px-40 bg-background-darkened">
-      <div className="relative w-full h-[613px] max-w-2xl hidden xl:flex">
+    <main className="flex items-center  min-h-screen mt-[-80px] px-2 xl:px-40 bg-background-darkened">
+      <div className="relative w-1/2 h-[613px] max-w-2xl hidden xl:flex justify-center">
         <Image
           className="absolute z-0 max-w-2xl inset-center"
           objectPosition="center"
@@ -26,9 +39,9 @@ export default function Login() {
           alt="Picture of the author"
         />
       </div>
-      <div className="flex flex-col items-center justify-start w-full max-w-lg xl:items-start">
+      <div className="flex flex-col items-center ml-[136px] justify-start w-1/2 xl:items-start ">
         <h1
-          className={`${archivo.className} text-[44px] font-semibold leading-[54px] not-italic text-primary mt-28 text-center xl:text-left`}
+          className={`${archivo.className} text-[44px] font-bold leading-[54px] not-italic text-heading  text-center xl:text-left`}
         >
           Estamos quase lá.
         </h1>
@@ -39,12 +52,45 @@ export default function Login() {
           experiência incrível.
         </span>
 
-        {/* <Link
-          href="/inicio"
-          className="flex items-center justify-center px-20 py-6 mt-16 text-lg font-medium text-center duration-300 bg-secondary text-background hover:bg-secondary-darkened hover:transition-all"
-        >
-          Começar agora
-        </Link> */}
+        <form className="mt-10 w-[384px] flex flex-col" onSubmit={handleSubmit}>
+          <div className="flex flex-col gap-2">
+            <div className="flex flex-row border border-text-secondary w-full">
+              <div className="p-[23px] bg-background border-r border-text-secondary">
+                <RiMailLine color="#7A7A80" size={20} />
+              </div>
+              <input
+                type="email"
+                name="email"
+                id="email"
+                placeholder="Email"
+                className="p-[23px] w-full placeholder:text-text-details placeholder:text-[16px]"
+                onChange={(event) => setEmail(event.target.value)}
+              />
+            </div>
+            <div className="flex flex-row border border-text-secondary w-full">
+              <div className="p-[23px] bg-background border-r border-text-secondary">
+                <RiLock2Line color="#7A7A80" size={20} />
+              </div>
+              <input
+                type="password"
+                name="password"
+                id="password"
+                placeholder="Senha"
+                className="p-[23px] w-full placeholder:text-text-details placeholder:text-[16px]"
+                onChange={(event) => setPassword(event.target.value)}
+              />
+            </div>
+          </div>
+
+          <Link href="/login" className="my-6 hover:underline">
+            Esqueci minha senha
+          </Link>
+
+          <PrimaryButton type="submit">Login</PrimaryButton>
+          <button className="mt-4 py-5 px-20 border-2 border-text-label text-primary-heading font-medium duration-200 hover:border-secondary transition-all">
+            Criar conta gratuita
+          </button>
+        </form>
       </div>
     </main>
   );
