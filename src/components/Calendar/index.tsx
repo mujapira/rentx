@@ -3,6 +3,7 @@ import { archivo } from "../../styles/fonts";
 import { useMemo, useState } from "react";
 import { getWeekDays } from "../../utils";
 import { RiArrowRightSLine, RiArrowLeftSLine } from "react-icons/ri";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "../ui/tooltip";
 interface CalendarWeek {
   week: number;
   days: Array<{
@@ -28,9 +29,8 @@ export function Calendar({ selectedDate, onDateSelected }: CalendarProps) {
     return dayjs().set("date", 1);
   });
 
-
-  function handleConfirm(){
-    console.log('confirm')
+  function handleConfirm() {
+    console.log("confirm");
   }
 
   //   const router = useRouter();
@@ -163,7 +163,7 @@ export function Calendar({ selectedDate, onDateSelected }: CalendarProps) {
           <div className="flex items-center justify-between w-full gap-2">
             <button
               onClick={handlePreviousMonth}
-              title="Previous month"
+              title="Mês anterior"
               className="flex items-center justify-center"
             >
               <RiArrowLeftSLine size={22} color="#7A7A80" />
@@ -176,63 +176,80 @@ export function Calendar({ selectedDate, onDateSelected }: CalendarProps) {
             </h1>
             <button
               onClick={handleNextMonth}
-              title="Next month"
+              title="Próximo mês"
               className="flex items-center justify-center"
             >
               <RiArrowRightSLine size={22} color="#7A7A80" />
             </button>
           </div>
         </div>
-        <table className="w-full">
-          <thead>
-            <tr className="border-b">
-              {shortWeekDays.map((weekDay) => (
-                <th className="text-[#AEAEB3] font-semibold text-sm py-4" key={weekDay}>
-                  {weekDay}
-                </th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {calendarWeeks.map(({ week, days }) => {
-              return (
-                <tr key={week}>
-                  {days.map(({ date, disabled }) => {
-                    const isStartDate =
-                      startDate && date.toDate().getTime() === startDate.getTime();
-                    const isEndDate = endDate && date.toDate().getTime() === endDate.getTime();
-                    const isInRange =
-                      startDate && endDate && date.toDate() > startDate && date.toDate() < endDate;
+        <TooltipProvider>
+          <table className="w-full">
+            <thead>
+              <tr className="border-b">
+                {shortWeekDays.map((weekDay) => (
+                  <th className="text-[#AEAEB3] font-semibold text-sm py-4" key={weekDay}>
+                    {weekDay}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {calendarWeeks.map(({ week, days }) => {
+                return (
+                  <tr key={week}>
+                    {days.map(({ date, disabled }) => {
+                      const isStartDate =
+                        startDate && date.toDate().getTime() === startDate.getTime();
+                      const isEndDate = endDate && date.toDate().getTime() === endDate.getTime();
+                      const isInRange =
+                        startDate &&
+                        endDate &&
+                        date.toDate() > startDate &&
+                        date.toDate() < endDate;
 
-                    return (
-                      <td key={date.toString()} className="p-0">
-                        <button
-                          onClick={() => handleSelectDate(date.toDate())}
-                          className={`all:unset text-center cursor-pointer max-[400px]:w-12 max-[400px]:h-12 w-14 h-14
-                        ${
-                          disabled
-                            ? "bg-none cursor-not-allowed opacity-40"
-                            : isInRange
-                            ? "bg-[#FDEDEF] text-secondary"
-                            : isStartDate || isEndDate
-                            ? " bg-secondary  text-background"
-                            : "bg-background text-[#47474D]"
-                        }
+                      return (
+                        <td key={date.toString()} className="p-0">
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <button
+                                onClick={() => handleSelectDate(date.toDate())}
+                                className={`all:unset text-center max-[400px]:w-12 max-[400px]:h-12 w-14 h-14
+                                ${
+                                  disabled
+                                    ? "bg-none cursor-not-allowed opacity-40"
+                                    : isInRange
+                                    ? "bg-[#FDEDEF] text-secondary"
+                                    : isStartDate || isEndDate
+                                    ? " bg-secondary text-background"
+                                    : "bg-background text-[#47474D]"
+                                }
+                        ${disabled && isInRange && "bg-slate-200"}
                         ${
                           !disabled && !isInRange && "hover:bg-secondary hover:text-background"
                         } focus:shadow-outline-gray-100`}
-                          disabled={disabled}
-                        >
-                          {date.get("date")}
-                        </button>
-                      </td>
-                    );
-                  })}
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
+                                disabled={disabled}
+                              >
+                                {date.get("date")}
+                              </button>
+                            </TooltipTrigger>
+                            <TooltipContent>
+                              {disabled && !isInRange && "Indisponível"}
+                              {disabled && isInRange && "Dia indisponível para devolução"}
+                              {isStartDate && "Data de retirada"}
+                              {isEndDate && "Data de devolução"}
+                              {isInRange && "Dia de uso"}
+                            </TooltipContent>
+                          </Tooltip>
+                        </td>
+                      );
+                    })}
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </TooltipProvider>
       </div>
 
       <div className="flex flex-col items-center w-full lg:items-start lg:w-auto justify-between gap-8 lg:gap-0 max-w-[400px] mx-auto lg:mx-0">
@@ -265,15 +282,14 @@ export function Calendar({ selectedDate, onDateSelected }: CalendarProps) {
             )}
           </div>
         </div>
-     
-          <button
-            onClick={handleConfirm}
-            disabled={!startDate || !endDate}
-            className="flex items-center justify-center w-full px-20 py-4 text-lg font-medium text-center duration-300 disabled:cursor-not-allowed disabled:opacity-70 lg:w-auto bg-secondary text-background hover:bg-secondary-darkened hover:transition-all"
-          >
-            Confirmar
-          </button>
-       
+
+        <button
+          onClick={handleConfirm}
+          disabled={!startDate || !endDate}
+          className="flex items-center justify-center w-full px-20 py-4 text-lg font-medium text-center duration-300 disabled:cursor-not-allowed disabled:opacity-70 lg:w-auto bg-secondary text-background hover:bg-secondary-darkened hover:transition-all"
+        >
+          Confirmar
+        </button>
       </div>
     </div>
   );
