@@ -212,9 +212,9 @@ export function Calendar({ onDateSelected }: CalendarProps) {
                     {days.map(({ date, disabled }) => {
                       const isStartDate = startDate?.getTime() === date.toDate().getTime();
                       const isEndDate = endDate?.getTime() === date.toDate().getTime();
-                      const isStartDateOnCalendar =
-                        dayjs(startDate).get("date") === date.get("date");
-                      const isEndDateOnCalendar = dayjs(endDate).get("date") === date.get("date");
+
+                      
+
                       const isInRange =
                         startDate &&
                         endDate &&
@@ -265,7 +265,7 @@ export function Calendar({ onDateSelected }: CalendarProps) {
 
                       if (disabled) {
                         buttonClasses += "bg-none cursor-not-allowed opacity-40 ";
-                      } else if ((isInRange && !isEndDateOnCalendar) || (isInRange && !isStartDateOnCalendar)) {
+                      } else if (isInRange) {
                         buttonClasses += "bg-[#FDEDEF] text-secondary ";
                       } else if (isStartDate || isEndDate) {
                         buttonClasses += "bg-secondary text-background ";
@@ -279,12 +279,12 @@ export function Calendar({ onDateSelected }: CalendarProps) {
                         buttonClasses += "hover:bg-secondary hover:text-background ";
                       }
 
-                      if (isStartDateOnCalendar) {
-                        buttonClasses += "bg-secondary !text-background ";
-                      }
-                      if (isEndDateOnCalendar) {
-                        buttonClasses += "bg-secondary !text-background";
-                      }
+                      // if (isStartDateOnCalendar) {
+                      //   buttonClasses += "bg-secondary !text-background ";
+                      // }
+                      // if (isEndDateOnCalendar) {
+                      //   buttonClasses += "bg-secondary !text-background";
+                      // }
 
                       return (
                         <td key={date.toString()} className="p-0">
@@ -306,8 +306,8 @@ export function Calendar({ onDateSelected }: CalendarProps) {
                                 isInRange,
                                 isStartDate,
                                 isEndDate,
-                                isEndDateOnCalendar,
-                                isStartDateOnCalendar,
+                                // isEndDateOnCalendar,
+                                // isStartDateOnCalendar,
                               })}
                             </TooltipContent>
                           </Tooltip>

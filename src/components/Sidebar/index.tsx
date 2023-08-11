@@ -10,10 +10,10 @@ export function SideBar() {
   const pathname = usePathname();
 
   return (
-    <nav className="fixed h-full bg-primary w-20 flex flex-col">
+    <nav className="fixed flex flex-col w-20 h-full bg-primary">
       <Link
         href="/"
-        className="w-20 h-20 flex content-center justify-center bg-secondary"
+        className="flex content-center justify-center w-20 h-20 bg-secondary"
       >
         <Image src={Logo} alt="rentx-logo" width={30} height={20} />
       </Link>
@@ -33,7 +33,7 @@ export function SideBar() {
         <Link
           href="/carros"
           className={`flex items-center justify-center h-14 ${
-            pathname == "/carros"
+            (pathname == "/carros") || (pathname == "/carros/filtros")
               ? "bg-primary-darkened border-l border-secondary"
               : "bg-primary-primary hover:border-l border-secondary cursor-pointer"
           }`}

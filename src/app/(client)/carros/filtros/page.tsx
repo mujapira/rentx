@@ -9,7 +9,6 @@ import { AiOutlineCalendar } from "react-icons/ai";
 import { FiDroplet } from "react-icons/fi";
 import { BiLeaf } from "react-icons/bi";
 import { BsLightningCharge } from "react-icons/bs";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radioGroup";
 import { HiOutlineAdjustmentsHorizontal } from "react-icons/hi2";
 import {
   Sheet,
@@ -28,10 +27,9 @@ import {
 
   // DialogDescription,
 } from "@/components/ui/dialog";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { X } from "lucide-react";
 import { Slider } from "@/components/ui/slider";
-import { PrimaryButton } from "@/components/PrimaryButton";
 
 interface FormData {
   carName: string;
@@ -39,26 +37,154 @@ interface FormData {
   fuelType: string;
   transmission: string;
 }
+interface CarData {
+  carName: string;
+  price: number;
+  fuelType: string;
+  transmission: string;
+}
 
 export default function Filtros() {
-  const { setDates, startDate, endDate } = useContext(RentalDetailsContext);
-  const [priceRange, setPriceRange] = useState([33, 25]);
-  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+  const fakeCars: CarData[] = [
+    {
+      carName: "Toyota Corolla",
+      price: 500,
+      fuelType: "Alcool",
+      transmission: "Automatico",
+    },
+    {
+      carName: "Honda Civic",
+      price: 600,
+      fuelType: "Gasolina",
+      transmission: "Automatico",
+    },
+    {
+      carName: "Ford Mustang",
+      price: 1000,
+      fuelType: "Gasolina",
+      transmission: "Manual",
+    },
+    {
+      carName: "Chevrolet Camaro",
+      price: 1100,
+      fuelType: "Gasolina",
+      transmission: "Manual",
+    },
+    {
+      carName: "Tesla Model S",
+      price: 2000,
+      fuelType: "Eletrico",
+      transmission: "Automatico",
+    },
+    {
+      carName: "BMW 3 Series",
+      price: 1500,
+      fuelType: "Gasolina",
+      transmission: "Automatico",
+    },
+    {
+      carName: "Audi A4",
+      price: 400,
+      fuelType: "Gasolina",
+      transmission: "Automatico",
+    },
+  ];
 
+  const [filterResults, setFilterResults] = useState<CarData[]>([]);
+  const [searchInputResults, setSearchInputResults] = useState<CarData[]>([]);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [isSearchFocused, setSearchFocused] = useState(false);
+
+  const [openFilterSheet, setOpenFilterSheet] = useState(false);
+
+  const { setDates, startDate, endDate } = useContext(RentalDetailsContext);
+  const priceRangerDefaultValues = [500, 1000];
+  const [priceRange, setPriceRange] = useState(priceRangerDefaultValues);
+  const [fuelType, setFuelType] = useState("");
+  const [transmissionType, setTransmissionType] = useState("");
+
+  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [formData, setFormData] = useState<FormData>({
     carName: "",
-    priceRange: [500, 1000],
-    fuelType: "gasolina",
-    transmission: "automatico",
+    priceRange: [0, 2000],
+    fuelType: "",
+    transmission: "",
   });
 
-  // Handle input changes
+  function handleClearResults(event:any) {
+    event.preventDefault();
+    setFormData({ carName: "", priceRange: [0, 2000], fuelType: "", transmission: "" });
+    setPriceRange(priceRangerDefaultValues);
+    setFuelType("");
+    setSearchQuery("");
+    setTransmissionType("");
+  }
+  
+  const isSearchFocusedCondition = isSearchFocused ? "opacity-50" : "";
+
+  const handleInputFocus = () => {
+    setSearchFocused(true);
+  };
+
+  const handleInputBlur = () => {
+    setSearchFocused(false);
+  };
+
+  const handleFilterSubmit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const matchingCars = fakeCars.filter((car) => {
+      // Filter conditions based on formData
+      const carNameMatch =
+        formData.carName === "" ||
+        car.carName.toLowerCase().includes(formData.carName.toLowerCase());
+      const priceRangeMatch =
+        car.price >= formData.priceRange[0] && car.price <= formData.priceRange[1];
+      const fuelTypeMatch =
+        formData.fuelType === "" || car.fuelType.toLowerCase() === formData.fuelType.toLowerCase();
+      const transmissionMatch =
+        formData.transmission === "" ||
+        car.transmission.toLowerCase() === formData.transmission.toLowerCase();
+
+      // Check if all filter conditions are true for this car
+      return carNameMatch && priceRangeMatch && fuelTypeMatch && transmissionMatch;
+    });
+    setFilterResults(matchingCars);
+    setOpenFilterSheet(false);
+  };
+
+  const handleSelectSearchedCar = (car: CarData) => {
+    setSearchQuery(car.carName);
+    setFormData({
+      ...formData,
+      carName: car.carName,
+    });
+
+    setSearchInputResults([]);
+  };
+
   function handleInputChange(event: ChangeEvent<HTMLInputElement>) {
     const { value } = event.target;
     setFormData({
       ...formData,
       carName: value,
     });
+
+    setSearchQuery(value);
+    handleInputSearch(value);
+  }
+
+  function handleInputSearch(query: string) {
+    if (query.trim() === "") {
+      // If the query is empty or only contains whitespace, return an empty array
+      setSearchInputResults([]);
+    } else {
+      const matchingCars = fakeCars.filter((car) => {
+        // Check if the car name matches the search query
+        return car.carName.toLowerCase().includes(query.toLowerCase());
+      });
+
+      setSearchInputResults(matchingCars);
+    }
   }
 
   function handlePriceSliderChange(newValue: number[]) {
@@ -70,21 +196,18 @@ export default function Filtros() {
   }
 
   function handleFuelTabChange(newValue: string) {
+    setFuelType(newValue);
     setFormData({
       ...formData,
       fuelType: newValue,
     });
   }
   function handleTransmissionTabChange(newValue: string) {
+    setTransmissionType(newValue);
     setFormData({
       ...formData,
       transmission: newValue,
     });
-  }
-  
-  function handleFilterSubmit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    console.log("Form data:", formData);
   }
 
   function capitalizeFirstLetter(str: string) {
@@ -106,7 +229,7 @@ export default function Filtros() {
     <div className="flex flex-col items-start justify-start w-full h-screen bg-background-darkened px-[116px]">
       <div className="flex items-center justify-between w-full pb-6 pt-11">
         <h1 className={`${archivo.className} font-bold text-heading text-center text-4xl`}>
-          0 carro(s) encontrados
+          {filterResults.length} carro(s) encontrados
         </h1>
 
         <div className="flex gap-5">
@@ -160,7 +283,7 @@ export default function Filtros() {
 
           <div className="border-l border-solid border-[#DEDEE3] h-6 my-auto"></div>
 
-          <Sheet>
+          <Sheet open={openFilterSheet} onOpenChange={setOpenFilterSheet}>
             <SheetTrigger
               asChild
               className="flex items-center justify-center w-12 h-12 transition-all duration-300 bg-secondary hover:bg-secondary-darkened"
@@ -170,7 +293,7 @@ export default function Filtros() {
               </button>
             </SheetTrigger>
             <SheetContent className="bg-background-darkened">
-              <SheetHeader className="flex flex-row mb-4">
+              <SheetHeader className={`${isSearchFocusedCondition} flex flex-row mb-4`}>
                 <SheetTitle className={`${archivo.className} text-2xl font-semibold text-heading`}>
                   Filtro
                 </SheetTitle>
@@ -180,15 +303,53 @@ export default function Filtros() {
                 </SheetClose>
               </SheetHeader>
               <div className="border-b border-solid border-[#DEDEE3] w-full mb-6"></div>
-              <form className="flex flex-col gap-8" onSubmit={handleFilterSubmit}>
-                <input
-                  onChange={handleInputChange}
-                  type="text"
-                  placeholder="Qual carro você deseja?"
-                  className="w-full px-4 py-4 border border-text-secondary bg-background placeholder:font-normal placeholder:text-text-details placeholder:text-base"
-                />
 
-                <div className="flex flex-col gap-4">
+              <form className={`flex flex-col gap-8`} onSubmit={handleFilterSubmit}>
+                <div className="relative">
+                  <input
+                    onChange={handleInputChange}
+                    value={searchQuery}
+                    onFocus={handleInputFocus}
+                    onBlur={handleInputBlur}
+                    type="text"
+                    placeholder="Qual carro você deseja?"
+                    className={`w-full px-4 py-4 border border-text-secondary bg-background placeholder:font-normal placeholder:text-text-details placeholder:text-base`}
+                  />
+                  <ul className="absolute z-50 w-full bg-background">
+                    {searchInputResults.map((car, index) => {
+                      const matchIndex = car.carName
+                        .toLowerCase()
+                        .indexOf(searchQuery.toLowerCase());
+
+                      const highlightedCarName =
+                        matchIndex !== -1 ? (
+                          <li
+                            onClick={() => handleSelectSearchedCar(car)}
+                            className="p-4 border-t cursor-pointer border-text-secondary"
+                            key={index}
+                          >
+                            {car.carName.substring(0, matchIndex)}
+                            <strong>
+                              {car.carName.substring(matchIndex, matchIndex + searchQuery.length)}
+                            </strong>
+                            {car.carName.substring(matchIndex + searchQuery.length)}
+                          </li>
+                        ) : (
+                          <li
+                            onClick={() => handleSelectSearchedCar(car)}
+                            className="p-4 border-t cursor-pointer border-text-secondary"
+                            key={index}
+                          >
+                            {car.carName}
+                          </li>
+                        );
+
+                      return highlightedCarName;
+                    })}
+                  </ul>
+                </div>
+
+                <div className={`${isSearchFocusedCondition} flex flex-col gap-4`}>
                   <div className="flex justify-between">
                     <span className={`${archivo.className} text-xl font-medium text-heading`}>
                       Preço ao dia
@@ -199,7 +360,8 @@ export default function Filtros() {
                   </div>
                   <Slider
                     onValueChange={handlePriceSliderChange}
-                    defaultValue={[500, 1000]}
+                    defaultValue={priceRangerDefaultValues}
+                    value={priceRange}
                     max={2000}
                     min={100}
                     step={1}
@@ -207,12 +369,13 @@ export default function Filtros() {
                   />
                 </div>
 
-                <div className="flex flex-col gap-4">
+                <div className={`${isSearchFocusedCondition} flex flex-col gap-4`}>
                   <span className={`${archivo.className} text-xl font-medium text-heading`}>
                     Combustível
                   </span>
                   <Tabs
-                    defaultValue="gasolina"
+                    defaultValue=""
+                    value={fuelType}
                     className="w-full"
                     onValueChange={handleFuelTabChange}
                   >
@@ -248,13 +411,14 @@ export default function Filtros() {
                   </Tabs>
                 </div>
 
-                <div className="flex flex-col gap-4">
+                <div className={`${isSearchFocusedCondition} flex flex-col gap-4`}>
                   <span className={`${archivo.className} text-xl font-medium text-heading`}>
                     Transmissão
                   </span>
 
                   <Tabs
-                    defaultValue="automatico"
+                    defaultValue=""
+                    value={transmissionType}
                     className="w-full"
                     onValueChange={handleTransmissionTabChange}
                   >
@@ -275,8 +439,15 @@ export default function Filtros() {
                   </Tabs>
                 </div>
 
-                <PrimaryButton>Filtrar resultados</PrimaryButton>
-                <button className="text-base hover:underline text-text-details">
+                <button
+                  className={`${isSearchFocusedCondition} flex items-center justify-center w-full px-20 py-5 text-lg font-medium text-center duration-300 disabled:cursor-not-allowed disabled:opacity-70 lg:w-auto bg-secondary text-background hover:bg-secondary-darkened hover:transition-all`}
+                >
+                  Filtrar resultados
+                </button>
+                <button
+                  onClick={handleClearResults}
+                  className="text-base hover:underline text-text-details"
+                >
                   Limpar dados
                 </button>
               </form>
@@ -287,7 +458,22 @@ export default function Filtros() {
 
       <div className="border-b border-solid border-[#DEDEE3] w-full mb-6"></div>
 
-      <div>carrinhos</div>
+      <div>
+        <ul className="">
+          {filterResults.map((car, index) => (
+            <li
+              key={index}
+              onClick={() => handleSelectSearchedCar(car)}
+              className="p-4 border-t cursor-pointer border-text-secondary"
+            >
+              {car.carName}
+              {car.fuelType}
+              {car.price}
+              {car.transmission}
+            </li>
+          ))}
+        </ul>
+      </div>
     </div>
   );
 }
