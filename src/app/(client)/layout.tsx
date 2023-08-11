@@ -17,6 +17,7 @@ interface RentalDetailsContextType {
   setDates: (startDate: Date, endDate: Date) => void;
   selectedDates?: Date[];
   setSelectedDates: (date: Date[]) => void;
+  isDatesPicked: boolean;
 }
 
 export const RentalDetailsContext = createContext<RentalDetailsContextType>(
@@ -27,7 +28,7 @@ export default function ClientLayout({ children }: ClientLayoutProps) {
   const [startDate, setStartDate] = useState<Date | null>(null);
   const [endDate, setEndDate] = useState<Date | null>(null);
   const [selectedDates, setSelectedDates] = useState<Date[]>();
-
+  const [isDatesPicked, setIsDatesPicked] = useState<boolean>(false);
   const setDates = (newStartDate: Date, newEndDate: Date) => {
     setStartDate(newStartDate);
     setEndDate(newEndDate);
@@ -45,6 +46,9 @@ export default function ClientLayout({ children }: ClientLayoutProps) {
     if (storedEndDate) {
       setEndDate(new Date(JSON.parse(storedEndDate)));
     }
+    if (storedStartDate && storedEndDate) {
+      setIsDatesPicked(true);
+    }
     if (storedSelectedDates) {
       try {
         const parsedSelectedDates = JSON.parse(storedSelectedDates);
@@ -55,8 +59,6 @@ export default function ClientLayout({ children }: ClientLayoutProps) {
       }
     }
   }, []);
-
-  // console.log(`start:${startDate}, end:${endDate}, selected:${selectedDates}`);
 
   return (
     <div className="w-full">
@@ -73,6 +75,7 @@ export default function ClientLayout({ children }: ClientLayoutProps) {
               setDates,
               selectedDates,
               setSelectedDates,
+              isDatesPicked
             }}
           >
             {children}

@@ -30,66 +30,18 @@ import {
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { X } from "lucide-react";
 import { Slider } from "@/components/ui/slider";
+import { fakeCars } from "@/utils";
+import { CarCard } from "@/components/CarCard";
+import { CarData } from "@/utils";
 
 interface FormData {
-  carName: string;
+  fullName: string;
   priceRange: [number, number];
   fuelType: string;
   transmission: string;
 }
-interface CarData {
-  carName: string;
-  price: number;
-  fuelType: string;
-  transmission: string;
-}
 
-export default function Filtros() {
-  const fakeCars: CarData[] = [
-    {
-      carName: "Toyota Corolla",
-      price: 500,
-      fuelType: "Alcool",
-      transmission: "Automatico",
-    },
-    {
-      carName: "Honda Civic",
-      price: 600,
-      fuelType: "Gasolina",
-      transmission: "Automatico",
-    },
-    {
-      carName: "Ford Mustang",
-      price: 1000,
-      fuelType: "Gasolina",
-      transmission: "Manual",
-    },
-    {
-      carName: "Chevrolet Camaro",
-      price: 1100,
-      fuelType: "Gasolina",
-      transmission: "Manual",
-    },
-    {
-      carName: "Tesla Model S",
-      price: 2000,
-      fuelType: "Eletrico",
-      transmission: "Automatico",
-    },
-    {
-      carName: "BMW 3 Series",
-      price: 1500,
-      fuelType: "Gasolina",
-      transmission: "Automatico",
-    },
-    {
-      carName: "Audi A4",
-      price: 400,
-      fuelType: "Gasolina",
-      transmission: "Automatico",
-    },
-  ];
-
+export default function FilterPage() {
   const [filterResults, setFilterResults] = useState<CarData[]>([]);
   const [searchInputResults, setSearchInputResults] = useState<CarData[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
@@ -105,21 +57,21 @@ export default function Filtros() {
 
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [formData, setFormData] = useState<FormData>({
-    carName: "",
+    fullName: "",
     priceRange: [0, 2000],
     fuelType: "",
     transmission: "",
   });
 
-  function handleClearResults(event:any) {
+  function handleClearResults(event: any) {
     event.preventDefault();
-    setFormData({ carName: "", priceRange: [0, 2000], fuelType: "", transmission: "" });
+    setFormData({ fullName: "", priceRange: [0, 2000], fuelType: "", transmission: "" });
     setPriceRange(priceRangerDefaultValues);
     setFuelType("");
     setSearchQuery("");
     setTransmissionType("");
   }
-  
+
   const isSearchFocusedCondition = isSearchFocused ? "opacity-50" : "";
 
   const handleInputFocus = () => {
@@ -135,8 +87,8 @@ export default function Filtros() {
     const matchingCars = fakeCars.filter((car) => {
       // Filter conditions based on formData
       const carNameMatch =
-        formData.carName === "" ||
-        car.carName.toLowerCase().includes(formData.carName.toLowerCase());
+        formData.fullName === "" ||
+        car.fullName.toLowerCase().includes(formData.fullName.toLowerCase());
       const priceRangeMatch =
         car.price >= formData.priceRange[0] && car.price <= formData.priceRange[1];
       const fuelTypeMatch =
@@ -145,7 +97,6 @@ export default function Filtros() {
         formData.transmission === "" ||
         car.transmission.toLowerCase() === formData.transmission.toLowerCase();
 
-      // Check if all filter conditions are true for this car
       return carNameMatch && priceRangeMatch && fuelTypeMatch && transmissionMatch;
     });
     setFilterResults(matchingCars);
@@ -153,10 +104,10 @@ export default function Filtros() {
   };
 
   const handleSelectSearchedCar = (car: CarData) => {
-    setSearchQuery(car.carName);
+    setSearchQuery(car.fullName);
     setFormData({
       ...formData,
-      carName: car.carName,
+      fullName: car.fullName,
     });
 
     setSearchInputResults([]);
@@ -166,7 +117,7 @@ export default function Filtros() {
     const { value } = event.target;
     setFormData({
       ...formData,
-      carName: value,
+      fullName: value,
     });
 
     setSearchQuery(value);
@@ -175,12 +126,10 @@ export default function Filtros() {
 
   function handleInputSearch(query: string) {
     if (query.trim() === "") {
-      // If the query is empty or only contains whitespace, return an empty array
       setSearchInputResults([]);
     } else {
       const matchingCars = fakeCars.filter((car) => {
-        // Check if the car name matches the search query
-        return car.carName.toLowerCase().includes(query.toLowerCase());
+        return car.fullName.toLowerCase().includes(query.toLowerCase());
       });
 
       setSearchInputResults(matchingCars);
@@ -226,7 +175,7 @@ export default function Filtros() {
     return parts.join(" ");
   }
   return (
-    <div className="flex flex-col items-start justify-start w-full h-screen bg-background-darkened px-[116px]">
+    <div className="flex flex-col items-start justify-start w-full h-screen bg-background-darkened h-full px-[116px]">
       <div className="flex items-center justify-between w-full pb-6 pt-11">
         <h1 className={`${archivo.className} font-bold text-heading text-center text-4xl`}>
           {filterResults.length} carro(s) encontrados
@@ -317,7 +266,7 @@ export default function Filtros() {
                   />
                   <ul className="absolute z-50 w-full bg-background">
                     {searchInputResults.map((car, index) => {
-                      const matchIndex = car.carName
+                      const matchIndex = car.fullName
                         .toLowerCase()
                         .indexOf(searchQuery.toLowerCase());
 
@@ -328,11 +277,11 @@ export default function Filtros() {
                             className="p-4 border-t cursor-pointer border-text-secondary"
                             key={index}
                           >
-                            {car.carName.substring(0, matchIndex)}
+                            {car.fullName.substring(0, matchIndex)}
                             <strong>
-                              {car.carName.substring(matchIndex, matchIndex + searchQuery.length)}
+                              {car.fullName.substring(matchIndex, matchIndex + searchQuery.length)}
                             </strong>
-                            {car.carName.substring(matchIndex + searchQuery.length)}
+                            {car.fullName.substring(matchIndex + searchQuery.length)}
                           </li>
                         ) : (
                           <li
@@ -340,7 +289,7 @@ export default function Filtros() {
                             className="p-4 border-t cursor-pointer border-text-secondary"
                             key={index}
                           >
-                            {car.carName}
+                            {car.fullName}
                           </li>
                         );
 
@@ -458,21 +407,10 @@ export default function Filtros() {
 
       <div className="border-b border-solid border-[#DEDEE3] w-full mb-6"></div>
 
-      <div>
-        <ul className="">
-          {filterResults.map((car, index) => (
-            <li
-              key={index}
-              onClick={() => handleSelectSearchedCar(car)}
-              className="p-4 border-t cursor-pointer border-text-secondary"
-            >
-              {car.carName}
-              {car.fuelType}
-              {car.price}
-              {car.transmission}
-            </li>
-          ))}
-        </ul>
+      <div className="grid w-full grid-cols-3 gap-24 py-10">
+        {filterResults.map((car, index) => (
+          <CarCard car={car} key={index} />
+        ))}
       </div>
     </div>
   );

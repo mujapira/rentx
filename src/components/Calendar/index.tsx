@@ -28,9 +28,10 @@ interface TooltipConditions {
   isInRange?: boolean | null;
   isStartDate?: boolean | null;
   isEndDate?: boolean | null;
-  isStartDateOnCalendar?: boolean | null;
-  isEndDateOnCalendar?: boolean | null;
+  isCalendarStartDate?: boolean | null;
+  isCalendarEndDate?: boolean | null;
 }
+
 import { DialogTrigger } from "../ui/dialog";
 
 interface CalendarProps {
@@ -52,6 +53,7 @@ export function Calendar({ onDateSelected }: CalendarProps) {
     setStartDate,
     setEndDate,
     startDate,
+    isDatesPicked,
     endDate,
     selectedDates,
     setSelectedDates,
@@ -210,11 +212,8 @@ export function Calendar({ onDateSelected }: CalendarProps) {
                 return (
                   <tr key={week}>
                     {days.map(({ date, disabled }) => {
-                      const isStartDate = startDate?.getTime() === date.toDate().getTime();
-                      const isEndDate = endDate?.getTime() === date.toDate().getTime();
-
-                      
-
+                      let isStartDate = startDate?.getTime() === date.toDate().getTime();
+                      let isEndDate = endDate?.getTime() === date.toDate().getTime();
                       const isInRange =
                         startDate &&
                         endDate &&
@@ -227,13 +226,16 @@ export function Calendar({ onDateSelected }: CalendarProps) {
                         ? dayjs(endDate).format("YYYY-MM-DD HH")
                         : "";
 
+                      const isCalendarStartDate =
+                        dayjs(startDate).format("YYYY-MM-DD") === dayjs(date).format("YYYY-MM-DD");
+                      const isCalendarEndDate =
+                        dayjs(endDate).format("YYYY-MM-DD") === dayjs(date).format("YYYY-MM-DD");
+
                       const getTooltipMessage = ({
                         disabled,
                         isInRange,
                         isStartDate,
                         isEndDate,
-                        isStartDateOnCalendar,
-                        isEndDateOnCalendar,
                       }: TooltipConditions) => {
                         if (disabled) {
                           if (!isInRange) {
@@ -242,17 +244,14 @@ export function Calendar({ onDateSelected }: CalendarProps) {
                           if (!isStartDate && !isEndDate) {
                             return "Dia indisponível para devolução";
                           }
-                        } else if (isStartDate || isStartDateOnCalendar) {
+                        } else if (isStartDate) {
                           if (startDateForTooltip !== endDateForTooltip) {
                             return "Data de retirada";
                           }
                           if (startDateForTooltip === endDateForTooltip) {
                             return "Dia de uso único";
                           }
-                        } else if (
-                          (isEndDate && startDateForTooltip !== endDateForTooltip) ||
-                          isEndDateOnCalendar
-                        ) {
+                        } else if (isEndDate && startDateForTooltip !== endDateForTooltip) {
                           return "Data de devolução";
                         } else if (isInRange && startDateForTooltip !== endDateForTooltip) {
                           return "Dia de uso";
@@ -278,14 +277,16 @@ export function Calendar({ onDateSelected }: CalendarProps) {
                       if (!disabled && !isInRange) {
                         buttonClasses += "hover:bg-secondary hover:text-background ";
                       }
+                      if (isCalendarStartDate || isCalendarEndDate) {
+                        buttonClasses += "bg-secondary text-white ";
+                      }
+                    
 
-                      // if (isStartDateOnCalendar) {
-                      //   buttonClasses += "bg-secondary !text-background ";
-                      // }
-                      // if (isEndDateOnCalendar) {
-                      //   buttonClasses += "bg-secondary !text-background";
-                      // }
-
+                      // console.log(
+                      //   dayjs(startDate).format("YYYY-MM-DD"),
+                      //   dayjs(date).format("YYYY-MM-DD")
+                      // );
+                
                       return (
                         <td key={date.toString()} className="p-0">
                           <Tooltip>
@@ -306,8 +307,8 @@ export function Calendar({ onDateSelected }: CalendarProps) {
                                 isInRange,
                                 isStartDate,
                                 isEndDate,
-                                // isEndDateOnCalendar,
-                                // isStartDateOnCalendar,
+                                isCalendarStartDate,
+                                isCalendarEndDate,
                               })}
                             </TooltipContent>
                           </Tooltip>
