@@ -25,7 +25,6 @@ import {
   DialogHeader,
   DialogTitle,
 
-  // DialogDescription,
 } from "@/components/ui/dialog";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { X } from "lucide-react";

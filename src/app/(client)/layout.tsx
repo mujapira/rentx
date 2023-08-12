@@ -34,6 +34,7 @@ export default function ClientLayout({ children }: ClientLayoutProps) {
   const setDates = (newStartDate: Date, newEndDate: Date) => {
     setStartDate(newStartDate);
     setEndDate(newEndDate);
+    setIsDatesPicked(true);
   };
 
   // Retrieve data from local storage when the component mounts
