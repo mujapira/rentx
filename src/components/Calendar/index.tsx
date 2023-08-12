@@ -1,9 +1,13 @@
 import dayjs from "dayjs";
 import { archivo } from "../../styles/fonts";
-import { useMemo, useState } from "react";
+import { useContext, useEffect, useMemo, useState } from "react";
 import { getWeekDays } from "../../utils";
 import { RiArrowRightSLine, RiArrowLeftSLine } from "react-icons/ri";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "../ui/tooltip";
+import { RentalDetailsContext } from "@/app/(client)/layout";
+import { useRouter, usePathname } from "next/navigation";
+import * as DialogPrimitive from "@radix-ui/react-dialog";
+
 interface CalendarWeek {
   week: number;
   days: Array<{
@@ -19,21 +23,54 @@ interface BlockedDates {
   blockedDates: number[];
 }
 
+interface TooltipConditions {
+  disabled?: boolean | null;
+  isInRange?: boolean | null;
+  isStartDate?: boolean | null;
+  isEndDate?: boolean | null;
+  isCalendarStartDate?: boolean | null;
+  isCalendarEndDate?: boolean | null;
+}
+
+import { DialogTrigger } from "../ui/dialog";
+
 interface CalendarProps {
-  selectedDate: Date[] | Date | null;
   onDateSelected: (date: Date) => void;
 }
 
-export function Calendar({ selectedDate, onDateSelected }: CalendarProps) {
+export function Calendar({ onDateSelected }: CalendarProps) {
+  const router = useRouter();
+  const pathname = usePathname();
+  const shortWeekDays = getWeekDays({ short: true });
   const [currentDate, setCurrentDate] = useState(() => {
     return dayjs().set("date", 1);
   });
+  const currentMonth = currentDate.format("MMMM");
+  const currentYear = currentDate.format("YYYY");
+
+  const {
+    setDates,
+    setStartDate,
+    setEndDate,
+    startDate,
+    isDatesPicked,
+    endDate,
+    selectedDates,
+    setSelectedDates,
+  } = useContext(RentalDetailsContext);
 
   function handleConfirm() {
-    console.log("confirm");
-  }
+    setDates(startDate!, endDate!);
+    setSelectedDates([startDate!, endDate!]);
 
-  //   const router = useRouter();
+    localStorage.setItem("startDate", JSON.stringify(startDate));
+    localStorage.setItem("endDate", JSON.stringify(endDate));
+    localStorage.setItem("selectedDates", JSON.stringify(selectedDates));
+
+    if (pathname != "/carros/filtros") {
+      router.push("/carros/filtros");
+    }
+  }
 
   function handlePreviousMonth() {
     const previousMonth = currentDate.subtract(1, "month");
@@ -46,27 +83,6 @@ export function Calendar({ selectedDate, onDateSelected }: CalendarProps) {
 
     setCurrentDate(nextMonth);
   }
-
-  const shortWeekDays = getWeekDays({ short: true });
-
-  const currentMonth = currentDate.format("MMMM");
-  const currentYear = currentDate.format("YYYY");
-
-  //   const username = String(router.query.username);
-
-  // const { data: blockedDates } = useQuery<BlockedDates>(
-  //   ['blocked-dates', currentDate.get('year'), currentDate.get('month')],
-  //   async () => {
-  //     const response = await api.get(`/users/${username}/blocked-dates`, {
-  //       params: {
-  //         year: currentDate.get('year'),
-  //         month: String(currentDate.get('month') + 1).padStart(2, '0'),
-  //       },
-  //     })
-
-  //     return response.data
-  //   },
-  // )
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const blockedDates: BlockedDates = {
@@ -138,9 +154,6 @@ export function Calendar({ selectedDate, onDateSelected }: CalendarProps) {
     return calendarWeeks;
   }, [currentDate, blockedDates]);
 
-  const [startDate, setStartDate] = useState<Date | null>(null);
-  const [endDate, setEndDate] = useState<Date | null>(null);
-
   function handleSelectDate(date: Date) {
     if (!startDate) {
       setStartDate(date);
@@ -157,7 +170,7 @@ export function Calendar({ selectedDate, onDateSelected }: CalendarProps) {
   }
 
   return (
-    <div className="flex flex-col justify-around max-w-4xl gap-8 p-1 mx-auto lg:gap0 lg:p-12 lg:flex-row bg-background">
+    <div className="flex flex-col justify-around max-w-4xl gap-8 p-1 mx-auto lg:gap0 lg:p-12 lg:px-6 lg:flex-row bg-background">
       <div className="max-w-[400px] mx-auto lg:mx-0">
         <div className="flex items-center justify-between">
           <div className="flex items-center justify-between w-full gap-2">
@@ -169,11 +182,11 @@ export function Calendar({ selectedDate, onDateSelected }: CalendarProps) {
               <RiArrowLeftSLine size={22} color="#7A7A80" />
             </button>
 
-            <h1
+            <span
               className={`${archivo.className} font-semibold capitalize text-heading text-2xl heading-[30px]`}
             >
               {currentMonth} <span>{currentYear}</span>
-            </h1>
+            </span>
             <button
               onClick={handleNextMonth}
               title="Próximo mês"
@@ -199,46 +212,104 @@ export function Calendar({ selectedDate, onDateSelected }: CalendarProps) {
                 return (
                   <tr key={week}>
                     {days.map(({ date, disabled }) => {
-                      const isStartDate =
-                        startDate && date.toDate().getTime() === startDate.getTime();
-                      const isEndDate = endDate && date.toDate().getTime() === endDate.getTime();
+                      let isStartDate = startDate?.getTime() === date.toDate().getTime();
+                      let isEndDate = endDate?.getTime() === date.toDate().getTime();
                       const isInRange =
                         startDate &&
                         endDate &&
                         date.toDate() > startDate &&
                         date.toDate() < endDate;
+                      const startDateForTooltip = startDate
+                        ? dayjs(startDate).format("YYYY-MM-DD HH")
+                        : "";
+                      const endDateForTooltip = endDate
+                        ? dayjs(endDate).format("YYYY-MM-DD HH")
+                        : "";
 
+                      const isCalendarStartDate =
+                        dayjs(startDate).format("YYYY-MM-DD") === dayjs(date).format("YYYY-MM-DD");
+                      const isCalendarEndDate =
+                        dayjs(endDate).format("YYYY-MM-DD") === dayjs(date).format("YYYY-MM-DD");
+
+                      const getTooltipMessage = ({
+                        disabled,
+                        isInRange,
+                        isStartDate,
+                        isEndDate,
+                      }: TooltipConditions) => {
+                        if (disabled) {
+                          if (!isInRange) {
+                            return "Indisponível";
+                          }
+                          if (!isStartDate && !isEndDate) {
+                            return "Dia indisponível para devolução";
+                          }
+                        } else if (isStartDate) {
+                          if (startDateForTooltip !== endDateForTooltip) {
+                            return "Data de retirada";
+                          }
+                          if (startDateForTooltip === endDateForTooltip) {
+                            return "Dia de uso único";
+                          }
+                        } else if (isEndDate && startDateForTooltip !== endDateForTooltip) {
+                          return "Data de devolução";
+                        } else if (isInRange && startDateForTooltip !== endDateForTooltip) {
+                          return "Dia de uso";
+                        } else {
+                          return "Selecionar dia";
+                        }
+                      };
+
+                      let buttonClasses = "";
+
+                      if (disabled) {
+                        buttonClasses += "bg-none cursor-not-allowed opacity-40 ";
+                      } else if (isInRange) {
+                        buttonClasses += "bg-[#FDEDEF] text-secondary ";
+                      } else if (isStartDate || isEndDate) {
+                        buttonClasses += "bg-secondary text-background ";
+                      } else {
+                        buttonClasses += "bg-background text-[#47474D] ";
+                      }
+                      if (disabled && isInRange) {
+                        buttonClasses += "bg-slate-200 ";
+                      }
+                      if (!disabled && !isInRange) {
+                        buttonClasses += "hover:bg-secondary hover:text-background ";
+                      }
+                      if (isCalendarStartDate || isCalendarEndDate) {
+                        buttonClasses += "bg-secondary text-white ";
+                      }
+                    
+
+                      // console.log(
+                      //   dayjs(startDate).format("YYYY-MM-DD"),
+                      //   dayjs(date).format("YYYY-MM-DD")
+                      // );
+                
                       return (
                         <td key={date.toString()} className="p-0">
                           <Tooltip>
                             <TooltipTrigger asChild>
                               <button
                                 onClick={() => handleSelectDate(date.toDate())}
-                                className={`all:unset text-center max-[400px]:w-12 max-[400px]:h-12 w-14 h-14
-                                ${
-                                  disabled
-                                    ? "bg-none cursor-not-allowed opacity-40"
-                                    : isInRange
-                                    ? "bg-[#FDEDEF] text-secondary"
-                                    : isStartDate || isEndDate
-                                    ? " bg-secondary text-background"
-                                    : "bg-background text-[#47474D]"
-                                }
-                        ${disabled && isInRange && "bg-slate-200"}
-                        ${
-                          !disabled && !isInRange && "hover:bg-secondary hover:text-background"
-                        } focus:shadow-outline-gray-100`}
+                                className={`all:unset text-center max-[400px]:w-12 max-[400px]:h-12 w-14 h-14 focus:shadow-outline-gray-100
+                                ${buttonClasses}`}
                                 disabled={disabled}
                               >
                                 {date.get("date")}
                               </button>
                             </TooltipTrigger>
+
                             <TooltipContent>
-                              {disabled && !isInRange && "Indisponível"}
-                              {disabled && isInRange && "Dia indisponível para devolução"}
-                              {isStartDate && "Data de retirada"}
-                              {isEndDate && "Data de devolução"}
-                              {isInRange && "Dia de uso"}
+                              {getTooltipMessage({
+                                disabled,
+                                isInRange,
+                                isStartDate,
+                                isEndDate,
+                                isCalendarStartDate,
+                                isCalendarEndDate,
+                              })}
                             </TooltipContent>
                           </Tooltip>
                         </td>
@@ -283,13 +354,23 @@ export function Calendar({ selectedDate, onDateSelected }: CalendarProps) {
           </div>
         </div>
 
-        <button
-          onClick={handleConfirm}
-          disabled={!startDate || !endDate}
-          className="flex items-center justify-center w-full px-20 py-4 text-lg font-medium text-center duration-300 disabled:cursor-not-allowed disabled:opacity-70 lg:w-auto bg-secondary text-background hover:bg-secondary-darkened hover:transition-all"
-        >
-          Confirmar
-        </button>
+        {pathname === "/carros/filtros" ? (
+          <DialogTrigger
+            onClick={handleConfirm}
+            disabled={!startDate || !endDate}
+            className="flex items-center justify-center w-full px-20 py-4 text-lg font-medium text-center duration-300 disabled:cursor-not-allowed disabled:opacity-70 lg:w-auto bg-secondary text-background hover:bg-secondary-darkened hover:transition-all"
+          >
+            Confirmar
+          </DialogTrigger>
+        ) : (
+          <button
+            onClick={handleConfirm}
+            disabled={!startDate || !endDate}
+            className="flex items-center justify-center w-full px-20 py-4 text-lg font-medium text-center duration-300 disabled:cursor-not-allowed disabled:opacity-70 lg:w-auto bg-secondary text-background hover:bg-secondary-darkened hover:transition-all"
+          >
+            Confirmar
+          </button>
+        )}
       </div>
     </div>
   );

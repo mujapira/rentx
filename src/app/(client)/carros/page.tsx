@@ -15,7 +15,7 @@ export default function Carros() {
       >
         Escolha uma data <br /> de início e fim do aluguel
       </h1>
-      <Calendar selectedDate={selectedDate} onDateSelected={setSelectedDate} />
+      <Calendar onDateSelected={setSelectedDate} />
     </div>
   );
 }
