@@ -9,9 +9,9 @@ export default function Carros() {
 
 
   return (
-    <div className="flex flex-col items-center justify-start w-full h-screen bg-background-darkened">
+    <div className="flex flex-col items-center justify-start w-full h-full pb-4 bg-background-darkened">
       <h1
-        className={`${archivo.className} font-bold text-heading text-center text-4xl p-10`}
+        className={`${archivo.className} font-bold sm:text-4xl text-heading text-center text-2xl p-10`}
       >
         Escolha uma data <br /> de início e fim do aluguel
       </h1>

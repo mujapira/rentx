@@ -65,7 +65,7 @@ export default function ClientLayout({ children }: ClientLayoutProps) {
       <SideBar />
       <div className="flex flex-col">
         <Topbar />
-        <div className="ml-20">
+        <div className="ml-0 mb-14 sm:ml-20 sm:mb-0">
           <RentalDetailsContext.Provider
             value={{
               startDate,

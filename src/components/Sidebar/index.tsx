@@ -10,18 +10,18 @@ export function SideBar() {
   const pathname = usePathname();
 
   return (
-    <nav className="fixed flex flex-col w-20 h-full bg-primary">
+    <nav className="fixed bottom-0 flex flex-col w-full h-auto sm:h-full sm:w-20 bg-primary">
       <Link
         href="/"
-        className="flex content-center justify-center w-20 h-20 bg-secondary"
+        className="content-center justify-center hidden w-20 h-20 sm:flex bg-secondary"
       >
         <Image src={Logo} alt="rentx-logo" width={30} height={20} />
       </Link>
 
-      <div className="flex flex-col my-auto">
+      <div className="flex flex-row max-sm:mx-auto sm:my-auto sm:flex-col">
         <Link
           href="/inicio"
-          className={`flex items-center justify-center h-14 ${
+          className={`flex items-center justify-center h-14 max-sm:px-10 ${
             pathname == "/inicio"
               ? "bg-primary-darkened border-l border-secondary"
               : "bg-primary-primary hover:border-l border-secondary cursor-pointer"
@@ -32,7 +32,7 @@ export function SideBar() {
         </Link>
         <Link
           href="/carros"
-          className={`flex items-center justify-center h-14 ${
+          className={`flex items-center justify-center h-14 max-sm:px-10 ${
             (pathname == "/carros") || (pathname == "/carros/filtros")
               ? "bg-primary-darkened border-l border-secondary"
               : "bg-primary-primary hover:border-l border-secondary cursor-pointer"
@@ -43,7 +43,7 @@ export function SideBar() {
         </Link>
         <Link
           href="/perfil"
-          className={`flex items-center justify-center h-14 ${
+          className={`flex items-center justify-center h-14 max-sm:px-10 ${
             pathname == "/perfil" ||
             pathname == "/login" ||
             pathname == "/cadastrar" ||
