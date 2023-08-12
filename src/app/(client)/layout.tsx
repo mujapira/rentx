@@ -29,9 +29,12 @@ export default function ClientLayout({ children }: ClientLayoutProps) {
   const [endDate, setEndDate] = useState<Date | null>(null);
   const [selectedDates, setSelectedDates] = useState<Date[]>();
   const [isDatesPicked, setIsDatesPicked] = useState<boolean>(false);
+
+
   const setDates = (newStartDate: Date, newEndDate: Date) => {
     setStartDate(newStartDate);
     setEndDate(newEndDate);
+    setIsDatesPicked(true);
   };
 
   // Retrieve data from local storage when the component mounts
@@ -65,7 +68,7 @@ export default function ClientLayout({ children }: ClientLayoutProps) {
       <SideBar />
       <div className="flex flex-col">
         <Topbar />
-        <div className="ml-20">
+        <div className="ml-0 mb-14 sm:ml-20 sm:mb-0">
           <RentalDetailsContext.Provider
             value={{
               startDate,
@@ -75,7 +78,7 @@ export default function ClientLayout({ children }: ClientLayoutProps) {
               setDates,
               selectedDates,
               setSelectedDates,
-              isDatesPicked
+              isDatesPicked,
             }}
           >
             {children}

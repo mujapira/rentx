@@ -25,7 +25,6 @@ import {
   DialogHeader,
   DialogTitle,
 
-  // DialogDescription,
 } from "@/components/ui/dialog";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { X } from "lucide-react";
@@ -175,239 +174,254 @@ export default function FilterPage() {
     return parts.join(" ");
   }
   return (
-    <div className="flex flex-col items-start justify-start w-full bg-background-darkened h-full min-h-[calc(100vh-80px)] px-[116px]">
-      <div className="flex items-center justify-between w-full pb-6 pt-11">
-        <h1 className={`${archivo.className} font-bold text-heading text-center text-4xl`}>
+    <div className="flex flex-col items-start justify-start w-full bg-background-darkened h-full min-h-[calc(100vh-80px)] px-4 xl:px-[116px]">
+      <div className="flex flex-col-reverse items-center justify-between w-full gap-4 pb-6 lg:gap-0 lg:flex-row pt-11">
+        <h1
+          className={`${archivo.className} font-bold text-heading text-center text-2xl lg:text-4xl`}
+        >
           {filterResults.length} carro(s) encontrados
         </h1>
 
-        <div className="flex gap-5">
-          <div className="flex flex-col">
-            <span className={`${archivo.className} capitalize text-text-details text-xs`}>DE</span>
-            {startDate ? (
-              <span className="text-lg font-semibold lg:text-lg text-heading">
-                {dateFormatter(startDate)}
+        <div className="flex gap-5 justify-between w-full  min-[480px]:w-auto min-[480px]:flex-row">
+          <div className="flex gap-5 flex-col min-[480px]:flex-row">
+            <div className="flex flex-col">
+              <span className={`${archivo.className} capitalize text-text-details text-xs`}>
+                DE
               </span>
-            ) : (
-              <hr className="w-24 mt-5" />
-            )}
-          </div>
+              {startDate ? (
+                <span className="text-lg font-semibold text-heading">
+                  {dateFormatter(startDate)}
+                </span>
+              ) : (
+                <hr className="w-24 mt-5" />
+              )}
+            </div>
 
-          <div className="flex items-center justify-center">
-            <RiArrowRightSLine size={22} color="#AEAEB3" />
-          </div>
+            <div className="items-center justify-center hidden sm:flex">
+              <RiArrowRightSLine size={22} color="#AEAEB3" />
+            </div>
 
-          <div className="flex flex-col">
-            <span className={`${archivo.className} capitalize text-text-details text-xs`}>ATÉ</span>
-            {endDate ? (
-              <span className="text-lg font-semibold lg:text-lg text-heading">
-                {dateFormatter(endDate)}
+            <div className="flex flex-col">
+              <span className={`${archivo.className} capitalize text-text-details text-xs`}>
+                ATÉ
               </span>
-            ) : (
-              <hr className="w-24 mt-5" />
-            )}
+              {endDate ? (
+                <span className="text-lg font-semibold text-heading">
+                  {dateFormatter(endDate)}
+                </span>
+              ) : (
+                <hr className="w-24 mt-5" />
+              )}
+            </div>
           </div>
 
-          <Dialog>
-            <DialogTrigger asChild>
-              <button
-                aria-controls="radix-:R29dlll6pj9:"
-                onClick={() => setDates(startDate!, endDate!)}
+          <div className="flex gap-5 flex-col min-[480px]:flex-row">
+            <Dialog>
+              <DialogTrigger asChild>
+                <button
+                  aria-controls="radix-:R29dlll6pj9:"
+                  onClick={() => setDates(startDate!, endDate!)}
+                  className="flex items-center justify-center w-12 h-12 transition-all duration-300 bg-secondary hover:bg-secondary-darkened"
+                >
+                  <AiOutlineCalendar color="#FFF" size="22px" />
+                </button>
+              </DialogTrigger>
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle
+                    className={`${archivo.className} p-6 text-lg font-semibold bg-primary text-background flex`}
+                  >
+                    Escolha uma data de início e fim
+                  </DialogTitle>
+                </DialogHeader>
+                <Calendar onDateSelected={setSelectedDate} />
+              </DialogContent>
+            </Dialog>
+
+            <div className="hidden sm:flex border-l border-solid border-[#DEDEE3] h-6 my-auto"></div>
+
+            <Sheet open={openFilterSheet} onOpenChange={setOpenFilterSheet}>
+              <SheetTrigger
+                asChild
                 className="flex items-center justify-center w-12 h-12 transition-all duration-300 bg-secondary hover:bg-secondary-darkened"
               >
-                <AiOutlineCalendar color="#FFF" size="22px" />
-              </button>
-            </DialogTrigger>
-            <DialogContent>
-              <DialogHeader>
-                <DialogTitle
-                  className={`${archivo.className} p-6 text-lg font-semibold bg-primary text-background flex`}
-                >
-                  Escolha uma data de início e fim do aluguel
-                </DialogTitle>
-              </DialogHeader>
-              <Calendar onDateSelected={setSelectedDate} />
-            </DialogContent>
-          </Dialog>
+                <button aria-controls="radix-:R39dlll6pj9:">
+                  <HiOutlineAdjustmentsHorizontal color="#FFF" size="22px" />
+                </button>
+              </SheetTrigger>
+              <SheetContent className="bg-background-darkened">
+                <SheetHeader className={`${isSearchFocusedCondition} flex flex-row mb-4`}>
+                  <SheetTitle
+                    className={`${archivo.className} text-2xl font-semibold text-heading`}
+                  >
+                    Filtro
+                  </SheetTitle>
+                  <SheetClose className="w-auto rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-secondary">
+                    <X className="w-6 h-6 text-text-details" />
+                    <span className="sr-only">Close</span>
+                  </SheetClose>
+                </SheetHeader>
+                <div className="border-b border-solid border-[#DEDEE3] w-full mb-6"></div>
 
-          <div className="border-l border-solid border-[#DEDEE3] h-6 my-auto"></div>
+                <form className={`flex flex-col gap-8`} onSubmit={handleFilterSubmit}>
+                  <div className="relative">
+                    <input
+                      onChange={handleInputChange}
+                      value={searchQuery}
+                      onFocus={handleInputFocus}
+                      onBlur={handleInputBlur}
+                      type="text"
+                      placeholder="Qual carro você deseja?"
+                      className={`w-full px-4 py-4 border border-text-secondary bg-background placeholder:font-normal placeholder:text-text-details placeholder:text-base`}
+                    />
+                    <ul className="absolute z-50 w-full bg-background">
+                      {searchInputResults.map((car, index) => {
+                        const matchIndex = car.fullName
+                          .toLowerCase()
+                          .indexOf(searchQuery.toLowerCase());
 
-          <Sheet open={openFilterSheet} onOpenChange={setOpenFilterSheet}>
-            <SheetTrigger
-              asChild
-              className="flex items-center justify-center w-12 h-12 transition-all duration-300 bg-secondary hover:bg-secondary-darkened"
-            >
-              <button aria-controls="radix-:R39dlll6pj9:">
-                <HiOutlineAdjustmentsHorizontal color="#FFF" size="22px" />
-              </button>
-            </SheetTrigger>
-            <SheetContent className="bg-background-darkened">
-              <SheetHeader className={`${isSearchFocusedCondition} flex flex-row mb-4`}>
-                <SheetTitle className={`${archivo.className} text-2xl font-semibold text-heading`}>
-                  Filtro
-                </SheetTitle>
-                <SheetClose className="w-auto rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-secondary">
-                  <X className="w-6 h-6 text-text-details" />
-                  <span className="sr-only">Close</span>
-                </SheetClose>
-              </SheetHeader>
-              <div className="border-b border-solid border-[#DEDEE3] w-full mb-6"></div>
+                        const highlightedCarName =
+                          matchIndex !== -1 ? (
+                            <li
+                              onClick={() => handleSelectSearchedCar(car)}
+                              className="p-4 border-t cursor-pointer border-text-secondary"
+                              key={index}
+                            >
+                              {car.fullName.substring(0, matchIndex)}
+                              <strong>
+                                {car.fullName.substring(
+                                  matchIndex,
+                                  matchIndex + searchQuery.length
+                                )}
+                              </strong>
+                              {car.fullName.substring(matchIndex + searchQuery.length)}
+                            </li>
+                          ) : (
+                            <li
+                              onClick={() => handleSelectSearchedCar(car)}
+                              className="p-4 border-t cursor-pointer border-text-secondary"
+                              key={index}
+                            >
+                              {car.fullName}
+                            </li>
+                          );
 
-              <form className={`flex flex-col gap-8`} onSubmit={handleFilterSubmit}>
-                <div className="relative">
-                  <input
-                    onChange={handleInputChange}
-                    value={searchQuery}
-                    onFocus={handleInputFocus}
-                    onBlur={handleInputBlur}
-                    type="text"
-                    placeholder="Qual carro você deseja?"
-                    className={`w-full px-4 py-4 border border-text-secondary bg-background placeholder:font-normal placeholder:text-text-details placeholder:text-base`}
-                  />
-                  <ul className="absolute z-50 w-full bg-background">
-                    {searchInputResults.map((car, index) => {
-                      const matchIndex = car.fullName
-                        .toLowerCase()
-                        .indexOf(searchQuery.toLowerCase());
-
-                      const highlightedCarName =
-                        matchIndex !== -1 ? (
-                          <li
-                            onClick={() => handleSelectSearchedCar(car)}
-                            className="p-4 border-t cursor-pointer border-text-secondary"
-                            key={index}
-                          >
-                            {car.fullName.substring(0, matchIndex)}
-                            <strong>
-                              {car.fullName.substring(matchIndex, matchIndex + searchQuery.length)}
-                            </strong>
-                            {car.fullName.substring(matchIndex + searchQuery.length)}
-                          </li>
-                        ) : (
-                          <li
-                            onClick={() => handleSelectSearchedCar(car)}
-                            className="p-4 border-t cursor-pointer border-text-secondary"
-                            key={index}
-                          >
-                            {car.fullName}
-                          </li>
-                        );
-
-                      return highlightedCarName;
-                    })}
-                  </ul>
-                </div>
-
-                <div className={`${isSearchFocusedCondition} flex flex-col gap-4`}>
-                  <div className="flex justify-between">
-                    <span className={`${archivo.className} text-xl font-medium text-heading`}>
-                      Preço ao dia
-                    </span>
-                    <span className="text-base font-medium text-secondary">
-                      R$ {priceRange[0]} - R$ {priceRange[1]}
-                    </span>
+                        return highlightedCarName;
+                      })}
+                    </ul>
                   </div>
-                  <Slider
-                    onValueChange={handlePriceSliderChange}
-                    defaultValue={priceRangerDefaultValues}
-                    value={priceRange}
-                    max={2000}
-                    min={100}
-                    step={1}
-                    minStepsBetweenThumbs={1}
-                  />
-                </div>
 
-                <div className={`${isSearchFocusedCondition} flex flex-col gap-4`}>
-                  <span className={`${archivo.className} text-xl font-medium text-heading`}>
-                    Combustível
-                  </span>
-                  <Tabs
-                    defaultValue=""
-                    value={fuelType}
-                    className="w-full"
-                    onValueChange={handleFuelTabChange}
+                  <div className={`${isSearchFocusedCondition} flex flex-col gap-4`}>
+                    <div className="flex justify-between">
+                      <span className={`${archivo.className} text-xl font-medium text-heading`}>
+                        Preço ao dia
+                      </span>
+                      <span className="text-base font-medium text-secondary">
+                        R$ {priceRange[0]} - R$ {priceRange[1]}
+                      </span>
+                    </div>
+                    <Slider
+                      onValueChange={handlePriceSliderChange}
+                      defaultValue={priceRangerDefaultValues}
+                      value={priceRange}
+                      max={2000}
+                      min={100}
+                      step={1}
+                      minStepsBetweenThumbs={1}
+                    />
+                  </div>
+
+                  <div className={`${isSearchFocusedCondition} flex flex-col gap-4`}>
+                    <span className={`${archivo.className} text-xl font-medium text-heading`}>
+                      Combustível
+                    </span>
+                    <Tabs
+                      defaultValue=""
+                      value={fuelType}
+                      className="w-full"
+                      onValueChange={handleFuelTabChange}
+                    >
+                      <TabsList className="w-full bg-background">
+                        <TabsTrigger
+                          value="gasolina"
+                          className="group flex flex-col items-center justify-center gap-2 data-[state=active]:bg-background-darkened transition-all duration-300 w-full"
+                        >
+                          <FiDroplet className="text-2xl text-text-details group-data-[state=active]:text-secondary" />
+                          <span className="text-sm text-text-details group-data-[state=active]:text-heading transition-all duration-300">
+                            Gasolina
+                          </span>
+                        </TabsTrigger>
+                        <TabsTrigger
+                          value="eletrico"
+                          className="group flex flex-col items-center justify-center gap-2 data-[state=active]:bg-background-darkened transition-all duration-300 w-full"
+                        >
+                          <BsLightningCharge className="text-2xl text-text-details group-data-[state=active]:text-secondary" />
+                          <span className="text-sm text-text-details group-data-[state=active]:text-heading transition-all duration-300">
+                            Elétrico
+                          </span>
+                        </TabsTrigger>
+                        <TabsTrigger
+                          value="alcool"
+                          className="group flex flex-col items-center justify-center gap-2 data-[state=active]:bg-background-darkened transition-all duration-300 w-full"
+                        >
+                          <BiLeaf className="text-2xl  text-text-details group-data-[state=active]:text-secondary" />
+                          <span className="text-sm text-text-details group-data-[state=active]:text-heading transition-all duration-300">
+                            Álcool
+                          </span>
+                        </TabsTrigger>
+                      </TabsList>
+                    </Tabs>
+                  </div>
+
+                  <div className={`${isSearchFocusedCondition} flex flex-col gap-4`}>
+                    <span className={`${archivo.className} text-xl font-medium text-heading`}>
+                      Transmissão
+                    </span>
+
+                    <Tabs
+                      defaultValue=""
+                      value={transmissionType}
+                      className="w-full"
+                      onValueChange={handleTransmissionTabChange}
+                    >
+                      <TabsList className="w-full bg-background">
+                        <TabsTrigger
+                          value="automatico"
+                          className="flex items-center text-base text-text-details justify-center data-[state=active]:bg-background-darkened w-full transition-all duration-300"
+                        >
+                          Automático
+                        </TabsTrigger>
+                        <TabsTrigger
+                          value="manual"
+                          className="flex items-center text-base justify-center text-text-details data-[state=active]:bg-background-darkened w-full transition-all duration-300"
+                        >
+                          Manual
+                        </TabsTrigger>
+                      </TabsList>
+                    </Tabs>
+                  </div>
+
+                  <button
+                    className={`${isSearchFocusedCondition} flex items-center justify-center w-full px-20 py-5 text-lg font-medium text-center duration-300 disabled:cursor-not-allowed disabled:opacity-70 lg:w-auto bg-secondary text-background hover:bg-secondary-darkened hover:transition-all`}
                   >
-                    <TabsList className="w-full bg-background">
-                      <TabsTrigger
-                        value="gasolina"
-                        className="group flex flex-col items-center justify-center gap-2 data-[state=active]:bg-background-darkened transition-all duration-300 w-full"
-                      >
-                        <FiDroplet className="text-2xl text-text-details group-data-[state=active]:text-secondary" />
-                        <span className="text-sm text-text-details group-data-[state=active]:text-heading transition-all duration-300">
-                          Gasolina
-                        </span>
-                      </TabsTrigger>
-                      <TabsTrigger
-                        value="eletrico"
-                        className="group flex flex-col items-center justify-center gap-2 data-[state=active]:bg-background-darkened transition-all duration-300 w-full"
-                      >
-                        <BsLightningCharge className="text-2xl text-text-details group-data-[state=active]:text-secondary" />
-                        <span className="text-sm text-text-details group-data-[state=active]:text-heading transition-all duration-300">
-                          Elétrico
-                        </span>
-                      </TabsTrigger>
-                      <TabsTrigger
-                        value="alcool"
-                        className="group flex flex-col items-center justify-center gap-2 data-[state=active]:bg-background-darkened transition-all duration-300 w-full"
-                      >
-                        <BiLeaf className="text-2xl  text-text-details group-data-[state=active]:text-secondary" />
-                        <span className="text-sm text-text-details group-data-[state=active]:text-heading transition-all duration-300">
-                          Álcool
-                        </span>
-                      </TabsTrigger>
-                    </TabsList>
-                  </Tabs>
-                </div>
-
-                <div className={`${isSearchFocusedCondition} flex flex-col gap-4`}>
-                  <span className={`${archivo.className} text-xl font-medium text-heading`}>
-                    Transmissão
-                  </span>
-
-                  <Tabs
-                    defaultValue=""
-                    value={transmissionType}
-                    className="w-full"
-                    onValueChange={handleTransmissionTabChange}
+                    Filtrar resultados
+                  </button>
+                  <button
+                    onClick={handleClearResults}
+                    className="text-base hover:underline text-text-details"
                   >
-                    <TabsList className="w-full bg-background">
-                      <TabsTrigger
-                        value="automatico"
-                        className="flex items-center text-base text-text-details justify-center data-[state=active]:bg-background-darkened w-full transition-all duration-300"
-                      >
-                        Automático
-                      </TabsTrigger>
-                      <TabsTrigger
-                        value="manual"
-                        className="flex items-center text-base justify-center text-text-details data-[state=active]:bg-background-darkened w-full transition-all duration-300"
-                      >
-                        Manual
-                      </TabsTrigger>
-                    </TabsList>
-                  </Tabs>
-                </div>
-
-                <button
-                  className={`${isSearchFocusedCondition} flex items-center justify-center w-full px-20 py-5 text-lg font-medium text-center duration-300 disabled:cursor-not-allowed disabled:opacity-70 lg:w-auto bg-secondary text-background hover:bg-secondary-darkened hover:transition-all`}
-                >
-                  Filtrar resultados
-                </button>
-                <button
-                  onClick={handleClearResults}
-                  className="text-base hover:underline text-text-details"
-                >
-                  Limpar dados
-                </button>
-              </form>
-            </SheetContent>
-          </Sheet>
+                    Limpar dados
+                  </button>
+                </form>
+              </SheetContent>
+            </Sheet>
+          </div>
         </div>
       </div>
 
       <div className="border-b border-solid border-[#DEDEE3] w-full mb-6"></div>
 
-      <div className="grid w-full grid-cols-3 gap-24 py-10">
+      <div className="grid w-full grid-cols-1 gap-4 py-10 2xl:gap-24 md:grid-cols-2 2xl:grid-cols-3">
         {filterResults.map((car, index) => (
           <CarCard car={car} key={index} />
         ))}

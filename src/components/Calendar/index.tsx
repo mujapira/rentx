@@ -67,7 +67,7 @@ export function Calendar({ onDateSelected }: CalendarProps) {
     localStorage.setItem("endDate", JSON.stringify(endDate));
     localStorage.setItem("selectedDates", JSON.stringify(selectedDates));
 
-    if (pathname != "/carros/filtros") {
+    if (pathname === "/carros") {
       router.push("/carros/filtros");
     }
   }
@@ -354,7 +354,7 @@ export function Calendar({ onDateSelected }: CalendarProps) {
           </div>
         </div>
 
-        {pathname === "/carros/filtros" ? (
+        {pathname != "/carros" ? (
           <DialogTrigger
             onClick={handleConfirm}
             disabled={!startDate || !endDate}
