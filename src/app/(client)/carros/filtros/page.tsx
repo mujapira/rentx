@@ -175,7 +175,7 @@ export default function FilterPage() {
     return parts.join(" ");
   }
   return (
-    <div className="flex flex-col items-start justify-start w-full h-screen bg-background-darkened h-full px-[116px]">
+    <div className="flex flex-col items-start justify-start w-full bg-background-darkened h-full min-h-[calc(100vh-80px)] px-[116px]">
       <div className="flex items-center justify-between w-full pb-6 pt-11">
         <h1 className={`${archivo.className} font-bold text-heading text-center text-4xl`}>
           {filterResults.length} carro(s) encontrados
