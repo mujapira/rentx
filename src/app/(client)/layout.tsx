@@ -29,6 +29,8 @@ export default function ClientLayout({ children }: ClientLayoutProps) {
   const [endDate, setEndDate] = useState<Date | null>(null);
   const [selectedDates, setSelectedDates] = useState<Date[]>();
   const [isDatesPicked, setIsDatesPicked] = useState<boolean>(false);
+
+
   const setDates = (newStartDate: Date, newEndDate: Date) => {
     setStartDate(newStartDate);
     setEndDate(newEndDate);
@@ -75,7 +77,7 @@ export default function ClientLayout({ children }: ClientLayoutProps) {
               setDates,
               selectedDates,
               setSelectedDates,
-              isDatesPicked
+              isDatesPicked,
             }}
           >
             {children}

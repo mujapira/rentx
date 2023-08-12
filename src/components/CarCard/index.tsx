@@ -13,7 +13,7 @@ interface CarCardProps {
   car: CarData;
 }
 export function CarCard({ car }: CarCardProps) {
-  const { fullName, modelName, brand, price, fuelType, carUrl } = car;
+  const { fullName, modelName, brand, price, fuelType, carUrl, uniqueIdentifier } = car;
 
   function FuelTypeIcon(fuelType: string) {
     switch (fuelType) {
@@ -35,7 +35,10 @@ export function CarCard({ car }: CarCardProps) {
   }
   return (
     <Link
-      href={""}
+      href={{
+        pathname: '/inicio/?',
+        query: { carro: uniqueIdentifier },
+      }}
       className="flex flex-col min-[500px]:flex-row-reverse 2xl:flex-col justify-between  bg-background border border-text-secondary hover:border-b hover:border-b-[#DC1637] hover:cursor-pointer"
     >
       <div className="flex items-center justify-center pl-0 pr-0 max-[500px]:pt-5 min-[500px]:pr-6 border-b-0 2xl:p-10 2xl:border-b border-text-secondary">

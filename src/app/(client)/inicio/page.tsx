@@ -1,3 +1,4 @@
+"use client"
 import { CarCard } from "@/components/CarCard";
 import { archivo } from "@/styles/fonts";
 import { fakeCars } from "@/utils";
