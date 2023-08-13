@@ -23,7 +23,7 @@ export function SideBar() {
           href="/inicio"
           className={`flex items-center justify-center h-14 max-sm:px-10 ${
             pathname.includes("/inicio")
-              ? "bg-primary-darkened border-l border-secondary"
+              ? "bg-primary-darkened border-b sm:border-b-0 border-l-0 sm:border-l border-secondary"
               : "bg-primary-primary hover:border-l border-secondary cursor-pointer"
           }`}
           prefetch
@@ -34,7 +34,7 @@ export function SideBar() {
           href="/carros"
           className={`flex items-center justify-center h-14 max-sm:px-10 ${
             pathname.includes("/carros")
-              ? "bg-primary-darkened border-l border-secondary"
+              ? "bg-primary-darkened border-b sm:border-b-0 border-l-0 sm:border-l border-secondary"
               : "bg-primary-primary hover:border-l border-secondary cursor-pointer"
           }`}
           prefetch
@@ -48,7 +48,7 @@ export function SideBar() {
             pathname == "/login" ||
             pathname == "/cadastrar" ||
             pathname == "/esqueci-minha-senha"
-              ? "bg-primary-darkened border-l border-secondary"
+              ? "bg-primary-darkened border-b sm:border-b-0 border-l-0 sm:border-l border-secondary"
               : "bg-primary-primary hover:border-l border-secondary cursor-pointer"
           }`}
           prefetch

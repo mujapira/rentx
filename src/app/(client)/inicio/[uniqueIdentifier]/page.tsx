@@ -134,7 +134,7 @@ export default function SelecionarCarro({
         </div>
       </div>
 
-      <div className="flex flex-col items-center justify-between w-full gap-24 py-10 xl:flex-row">
+      <div className="flex flex-col items-center justify-between w-full gap-5 py-10 xl:gap-24 xl:flex-row">
         <div className="flex items-center justify-center w-full max-w-7xl">
           {images ? (
             <Carousel loop>

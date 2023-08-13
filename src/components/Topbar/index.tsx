@@ -5,7 +5,7 @@ import { RiUser6Line } from "react-icons/ri";
 export function Topbar() {
   return (
     <div className="flex items-center justify-between h-20 ml-0 sm:ml-20 bg-background px-4 xl:px-[116px]">
-      <Link href="./inicio" className="text-xl not-italic font-semibold text-center text-primary xl:text-left">
+      <Link href="/inicio" className="text-xl not-italic font-semibold text-center text-primary xl:text-left">
         Início
       </Link>
 

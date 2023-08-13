@@ -64,7 +64,7 @@ const Carousel = ({ children, ...options }: CarouselProps) => {
 
   const CarouselControls = (props: ControlProps) => {
     return (
-      <div className="flex items-center justify-center mt-10">
+      <div className="flex items-center justify-center mt-4 xl:mt-10">
         <button
           onClick={() => {
             if (props.canScrollPrev) {
