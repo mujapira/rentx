@@ -283,10 +283,7 @@ export function Calendar({ onDateSelected, isCalendarOpen }: CalendarProps) {
                         buttonClasses += "bg-secondary text-white ";
                       }
 
-                      // console.log(
-                      //   dayjs(startDate).format("YYYY-MM-DD"),
-                      //   dayjs(date).format("YYYY-MM-DD")
-                      // );
+                
 
                       return (
                         <td key={date.toString()} className="p-0">
