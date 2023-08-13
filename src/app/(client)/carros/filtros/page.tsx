@@ -24,7 +24,8 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
-
+  DialogClose,
+  DialogOverlay,
 } from "@/components/ui/dialog";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { X } from "lucide-react";
@@ -48,7 +49,8 @@ export default function FilterPage() {
 
   const [openFilterSheet, setOpenFilterSheet] = useState(false);
 
-  const { setDates, startDate, endDate, isCalendarOpen } = useContext(RentalDetailsContext);
+  const { setDates, startDate, endDate, isCalendarOpen, setIsCalendarOpen } =
+    useContext(RentalDetailsContext);
   const priceRangerDefaultValues = [500, 1000];
   const [priceRange, setPriceRange] = useState(priceRangerDefaultValues);
   const [fuelType, setFuelType] = useState("");
@@ -206,9 +208,7 @@ export default function FilterPage() {
                 ATÉ
               </span>
               {endDate ? (
-                <span className="text-lg font-semibold text-heading">
-                  {dateFormatter(endDate)}
-                </span>
+                <span className="text-lg font-semibold text-heading">{dateFormatter(endDate)}</span>
               ) : (
                 <hr className="w-24 mt-5" />
               )}
@@ -216,23 +216,37 @@ export default function FilterPage() {
           </div>
 
           <div className="flex gap-5 flex-col min-[480px]:flex-row">
-            <Dialog>
+            <Dialog open={isCalendarOpen}>
               <DialogTrigger asChild>
                 <button
                   aria-controls="radix-:R29dlll6pj9:"
-                  onClick={() => setDates(startDate!, endDate!)}
+                  onClick={() => {
+                    setDates(startDate!, endDate!);
+                    setIsCalendarOpen(true);
+                  }}
                   className="flex items-center justify-center w-12 h-12 transition-all duration-300 bg-secondary hover:bg-secondary-darkened"
                 >
                   <AiOutlineCalendar color="#FFF" size="22px" />
                 </button>
               </DialogTrigger>
+              <DialogOverlay onClick={() => setIsCalendarOpen(false)} />
               <DialogContent>
-                <DialogHeader>
+                <DialogHeader className="flex flex-row justify-between p-6 bg-primary">
                   <DialogTitle
-                    className={`${archivo.className} p-6 text-lg font-semibold bg-primary text-background flex`}
+                    className={`${archivo.className} text-lg font-semibold  text-background flex`}
                   >
                     Escolha uma data de início e fim
                   </DialogTitle>
+                  <DialogClose
+                    onClick={() => setIsCalendarOpen(false)}
+                    className="
+                  rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 
+                  focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-secondary
+                  "
+                  >
+                    <X className="w-6 h-6 text-text-details" />
+                    <span className="sr-only">Close</span>
+                  </DialogClose>
                 </DialogHeader>
                 <Calendar onDateSelected={setSelectedDate} isCalendarOpen={isCalendarOpen} />
               </DialogContent>

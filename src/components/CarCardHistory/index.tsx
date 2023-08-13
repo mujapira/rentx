@@ -38,12 +38,12 @@ export function CarCardHistory({ car, rent }: CarCardProps) {
     }
   }
   return (
-    <>
+    <div className="flex flex-col w-full">
       <div className="flex flex-col min-[500px]:flex-row-reverse justify-between bg-background border border-text-secondary hover:cursor-pointer w-full max-w-[600px]">
-        <div className="flex items-center justify-center pl-0 pr-0 max-[500px]:pt-5 min-[500px]:pr-6 border-b-0  border-text-secondary">
+        <div className="flex items-center justify-center pl-0 pr-0 max-[500px]:pt-5 min-[500px]:pr-6 border-b-0 w-full border-text-secondary">
           <Image src={carUrl} alt={fullName} height={131} width={280} loading="lazy" />
         </div>
-        <div className="flex flex-row items-center justify-between w-full  min-[500px]:max-w-[160px] px-6 py-5 pr-5 min-[500px]:pr-0 ">
+        <div className="flex flex-row items-center justify-between w-full min-[500px]:max-w-[160px] px-6 py-5 pr-5 min-[500px]:pr-0 ">
           <div className="flex flex-row min-[500px]:flex-col  items-start gap-[26px] text-text-details w-full min-[500px]:w-auto ">
             <div className="flex flex-col whitespace-nowrap">
               <span className={`${archivo.className} font-medium text-[14px]`}>{brand}</span>
@@ -72,18 +72,24 @@ export function CarCardHistory({ car, rent }: CarCardProps) {
           </div>
         </div>
       </div>
+
       <div className="flex mt-1 justify-between items-center bg-background border border-text-secondary max-w-[600px] px-6 py-5">
         <span className={`${archivo.className} font-medium text-xs text-text-details`}>
           PERÍODO DO ALUGUEL
         </span>
-        <span className="text-lg font-semibold text-heading">
-          {dayjs(endDate, "DD/MM/YYYY").format("DD MMM YYYY")}
-        </span>
-        <ArrowRight className="text-text-details" />
-        <span className="text-lg font-semibold text-heading">
-          {dayjs(startDate, "DD/MM/YYYY").format("DD MMM YYYY")}
-        </span>
+
+        <div className="flex flex-col gap-2 sm:flex-row">
+          <span className="text-sm font-semibold sm:text-lg text-heading">
+            {dayjs(endDate, "DD/MM/YYYY").format("DD MMM YYYY")}
+          </span>
+
+          <ArrowRight className="hidden text-text-details sm:flex" />
+
+          <span className="text-sm font-semibold sm:text-lg text-heading">
+            {dayjs(startDate, "DD/MM/YYYY").format("DD MMM YYYY")}
+          </span>
+        </div>
       </div>
-    </>
+    </div>
   );
 }
