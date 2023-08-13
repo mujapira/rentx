@@ -28,9 +28,9 @@ export default function Perfil() {
 
   console.log(userRents);
   return (
-    <div className="flex items-start justify-center w-full h-full pb-4 bg-background-darkened min-h-[calc(100vh-80px)] px-[116px]">
+    <div className="flex items-center lg:items-start flex-col lg:flex-row justify-center w-full h-full pb-4 bg-background-darkened min-h-[calc(100vh-80px)] px-4 2xl:px-[116px]">
       {/* user */}
-      <div className="flex flex-col w-full max-w-[600px] p-16 mt-8 border-r">
+      <div className="flex flex-col w-full max-w-[600px] p-4 lg:pl-0 2xl:p-16 mt-8 border-r-none lg:border-r">
         <div className="relative flex items-center justify-center max-w-[180px] mx-auto">
           <Image
             src={userImageUrl ? userImageUrl : rentx}
@@ -183,20 +183,17 @@ export default function Perfil() {
       </div>
 
       {/* agendamentos */}
-      <div className="flex flex-col max-w-[800px] w-full gap-6 p-16">
+      <div className="flex flex-col items-start w-full max-w-[600px] lg:max-w-[800px gap-6 p-4 lg:pr-0 2xl:p-16">
         <h1 className={`${archivo.className} text-heading text-2xl font-semibold`}>
           Agendamentos feitos
         </h1>
+        <div className="flex flex-col w-full gap-4">
+          {userRents.map((rent) => {
+            const rentedCar: CarData | undefined = fakeCars.find((car) => car.id === rent.carId);
 
-        {userRents.map((rent) => {
-          const rentedCar: CarData | undefined = fakeCars.find((car) => car.id === rent.carId);
-
-          return (
-            <div key={rent.id} className="">
-             <CarCardHistory car={rentedCar!} rent={rent} />
-            </div>
-          );
-        })}
+            return <CarCardHistory key={rent.id} car={rentedCar!} rent={rent} />;
+          })}
+        </div>
       </div>
     </div>
   );
