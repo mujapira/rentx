@@ -1,43 +1,68 @@
 "use client";
 
-import React, { createContext, useState, useContext } from "react";
+import React, { createContext, useState, useContext, useEffect } from "react";
+import { UserData, userData } from "@/utils";
 
 interface AuthContextData {
   login: (username: string, password: string) => void;
   logout: () => void;
+  user: UserData | undefined;
 }
 
 interface ClientLayoutProps {
   children: React.ReactNode;
 }
 
-const AuthContext = createContext<AuthContextData>({} as AuthContextData);
+export const AuthContext = createContext<AuthContextData>({} as AuthContextData);
 
 export function useAuth() {
   return useContext(AuthContext);
 }
 
 const AuthProvider = ({ children }: ClientLayoutProps) => {
-  const login = (username: string, password: string) => {
-    //   Aqui você faria uma lógica de autenticação adequada
-    //   Pode ser uma requisição para um servidor, por exemplo
-    //   Neste exemplo simples, vamos considerar que a autenticação é bem-sucedida
-    const fakeUserId = 1;
-    //   setUser({
-    //     id: fakeUserId,
-    //     username,
-    //   });
+  const [user, setUser] = useState<UserData>({
+    id: 0,
+    fullName: "...",
+    firstName: "...",
+    email: "...",
+    cnh: "...",
+    userImageUrl: "",
+  });
+
+  const fetchUserData = (): Promise<UserData> => {
+    // Simula a busca de dados de usuário
+    return new Promise((resolve) => {
+      // Dados fictícios do usuário
+      const fakeUserData: UserData = {
+        id: userData.id,
+        fullName: userData.fullName,
+        firstName: userData.firstName,
+        email: userData.email,
+        cnh: userData.cnh,
+        userImageUrl: userData.userImageUrl,
+      };
+
+      // Simula um atraso de 1 segundo (1000 milissegundos) para simular operação assíncrona
+      setTimeout(() => {
+        resolve(fakeUserData);
+      }, 500);
+    });
   };
 
-  const logout = () => {
-    //   setUser(null);
-  };
+  useEffect(() => {
+    const fetchData = async () => {
+      const fetchedUserData = await fetchUserData();
+      setUser(fetchedUserData);
+    };
 
-  return (
-    <AuthContext.Provider value={{ login, logout }}>
-      {children}
-    </AuthContext.Provider>
-  );
+    fetchData();
+  }, []);
+
+  const login = (username: string, password: string) => {};
+
+  const logout = () => {};
+
+  return <AuthContext.Provider value={{ login, logout, user }}>{children}</AuthContext.Provider>;
 };
 
 export default AuthProvider;

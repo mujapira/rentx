@@ -1,5 +1,5 @@
 "use client";
-import { useContext, useEffect, useState } from "react";
+import { ReactNode, useContext, useEffect, useState } from "react";
 import { CarData, fakeCars } from "@/utils";
 import { archivo } from "@/styles/fonts";
 import Link from "next/link";
@@ -18,12 +18,25 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
+  DialogOverlay,
+  DialogPortal,
+  DialogClose,
 } from "@/components/ui/dialog";
 import { Calendar } from "@/components/Calendar";
-
+import { useRouter } from "next/navigation";
 import placeholder from "@/assets/rentx-logo.png";
 import { RentalDetailsContext } from "../../layout";
 import { AiOutlineCalendar } from "react-icons/ai";
+import { X } from "lucide-react";
+import dayjs from "dayjs";
+
+import useEmblaCarousel, { EmblaOptionsType } from "embla-carousel-react";
+import Carousel from "@/components/Carousel";
+
+type PropType = {
+  options?: EmblaOptionsType;
+  slides: ReactNode[];
+};
 
 export default function SelecionarCarro({
   params,
@@ -34,9 +47,23 @@ export default function SelecionarCarro({
 }) {
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [selectedCar, setSelectedCar] = useState<CarData>();
-  const { startDate, endDate, isDatesPicked, setDates } = useContext(RentalDetailsContext);
-
+  const { startDate, endDate, isDatesPicked, setDates, isCalendarOpen, setIsCalendarOpen } =
+    useContext(RentalDetailsContext);
+  const [isOpen, setIsOpen] = useState(false);
   const uniqueIdentifier = searchParams.carro;
+  const rentPeriodInDays = dayjs(endDate).diff(dayjs(startDate), "day");
+
+  const router = useRouter();
+
+  function handleRent() {
+    const requestCarRent = {
+      selectedDate: [startDate, endDate],
+      selectedCar: uniqueIdentifier,
+      userId: "1",
+    };
+    console.log(requestCarRent);
+    router.push("/sucesso");
+  }
 
   function getCarByUniqueIdentifier(
     cars: CarData[],
@@ -78,11 +105,12 @@ export default function SelecionarCarro({
     topSpeed,
     transmission,
     fullName,
+    images,
   } = selectedCar || {};
 
   return (
     <div className="h-full min-h-[calc(100vh-80px)] px-4 xl:px-[116px]">
-      <div className="flex items-center justify-start pb-6 border-b gap-11 border-text-secondary">
+      <div className="flex items-center justify-start gap-6 pb-6 border-b sm:gap-11 border-text-secondary">
         <Link href="/inicio">
           <RiArrowLeftSLine className="text-3xl text-text" />
         </Link>
@@ -106,57 +134,83 @@ export default function SelecionarCarro({
         </div>
       </div>
 
-      <div className="flex items-center justify-center w-full gap-24 py-10">
-        <div className="relative flex items-center justify-center">
-          <Image
-            src={carUrl ? carUrl : placeholder}
-            alt={fullName ? fullName : ""}
-            width={200}
-            height={200}
-            loading="lazy"
-          />
+      <div className="flex flex-col items-center justify-between w-full gap-5 py-10 xl:gap-24 xl:flex-row">
+        <div className="flex items-center justify-center w-full max-w-7xl">
+          {images ? (
+            <Carousel loop>
+              {images.map((src, i) => {
+                return (
+                  // 👇 style each individual slide.
+                  // relative - needed since we use the fill prop from next/image component
+                  // h-64 - arbitrary height
+                  // flex[0_0_100%]
+                  //   - shorthand for flex-grow:0; flex-shrink:0; flex-basis:100%
+                  //   - we want this slide to not be able to grow or shrink and take up 100% width of the viewport.
+                  <div className="relative flex-[0_0_100%]" key={i}>
+                    {/* use object-cover + fill since we don't know the height and width of the parent */}
+                    <Image
+                      src={src}
+                      alt={fullName ? fullName : ""}
+                      width={900}
+                      height={423}
+                      loading="lazy"
+                      className="mx-auto"
+                    />
+                  </div>
+                );
+              })}
+            </Carousel>
+          ) : (
+            <Image
+              src={carUrl ? carUrl : placeholder}
+              alt={fullName ? fullName : ""}
+              width={648}
+              height={423}
+              loading="lazy"
+            />
+          )}
         </div>
 
         <div className="flex flex-col w-full max-w-md">
           <div className="grid w-full grid-cols-2 gap-2">
-            <div className="flex text-lg border-b bg-background-darkened text-text border-text-secondary">
+            <div className="flex text-sm border-b sm:text-lg bg-background-darkened text-text border-text-secondary">
               <span className="flex items-center justify-center p-4 border-r border-background aspect-square">
-                <MdSpeed className="text-3xl font-bold text-heading" />
+                <MdSpeed className="text-xl font-bold sm:text-3xl text-heading" />
               </span>
               <span className="flex items-center justify-center p-4">{topSpeed}km/h</span>
             </div>
 
-            <div className="flex text-lg border-b bg-background-darkened text-text border-text-secondary">
+            <div className="flex text-sm border-b sm:text-lg bg-background-darkened text-text border-text-secondary">
               <span className="flex items-center justify-center p-4 border-r border-background aspect-square">
-                <RiUploadLine className="text-3xl font-bold text-heading" />
+                <RiUploadLine className="text-xl font-bold sm:text-3xl text-heading" />
               </span>
               <span className="flex items-center justify-center p-4">{time}s</span>
             </div>
 
-            <div className="flex text-lg border-b bg-background-darkened text-text border-text-secondary">
+            <div className="flex text-sm border-b sm:text-lg bg-background-darkened text-text border-text-secondary">
               <span className="flex items-center justify-center p-4 border-r border-background aspect-square">
-                <FiDroplet className="text-3xl font-bold text-heading" />
+                <FiDroplet className="text-xl font-bold sm:text-3xl text-heading" />
               </span>
               <span className="flex items-center justify-center p-4">{fuelType}</span>
             </div>
 
-            <div className="flex text-lg border-b bg-background-darkened text-text border-text-secondary">
+            <div className="flex text-sm border-b sm:text-lg bg-background-darkened text-text border-text-secondary">
               <span className="flex items-center justify-center p-4 border-r border-background aspect-square">
-                <GiGearStickPattern className="text-3xl font-bold text-heading" />
+                <GiGearStickPattern className="text-xl font-bold sm:text-3xl text-heading" />
               </span>
               <span className="flex items-center justify-center p-4">{transmission}</span>
             </div>
 
-            <div className="flex text-lg border-b bg-background-darkened text-text border-text-secondary">
+            <div className="flex text-sm border-b sm:text-lg bg-background-darkened text-text border-text-secondary">
               <span className="flex items-center justify-center p-4 border-r border-background aspect-square">
-                <RiUser6Line className="text-3xl font-bold text-heading" />
+                <RiUser6Line className="text-xl font-bold sm:text-3xl text-heading" />
               </span>
               <span className="flex items-center justify-center p-4">{seats} pessoas</span>
             </div>
 
-            <div className="flex text-lg border-b bg-background-darkened text-text border-text-secondary">
+            <div className="flex text-sm border-b sm:text-lg bg-background-darkened text-text border-text-secondary">
               <span className="flex items-center justify-center p-4 border-r border-background aspect-square">
-                <TbSteeringWheel className="text-3xl font-bold text-heading" />
+                <TbSteeringWheel className="text-xl font-bold sm:text-3xl text-heading" />
               </span>
               <span className="flex items-center justify-center p-4">{horsePower} HP</span>
             </div>
@@ -187,76 +241,123 @@ export default function SelecionarCarro({
             </TabsContent>
             <TabsContent value="time" className="text-base text-text">
               {isDatesPicked ? (
-                <div>
-                  <div className="flex flex-col">
-                    <span className={`${archivo.className} capitalize text-text-details text-xs`}>
-                      DE
-                    </span>
-                    {startDate ? (
-                      <span className="text-lg font-semibold text-heading">
-                        {dateFormatter(startDate)}
-                      </span>
-                    ) : (
-                      <hr className="w-24 mt-5" />
-                    )}
-                  </div>
+                <>
+                  <div className="flex items-center justify-between pb-4 border-b border-text-secondary">
+                    <div className="flex items-center gap-4">
+                      <div className="flex flex-col">
+                        <span
+                          className={`${archivo.className} capitalize text-text-details text-xs`}
+                        >
+                          DE
+                        </span>
+                        {startDate ? (
+                          <span className="text-lg font-semibold text-heading">
+                            {dateFormatter(startDate)}
+                          </span>
+                        ) : (
+                          <hr className="w-24 mt-5" />
+                        )}
+                      </div>
 
-                  <div className="items-center justify-center hidden sm:flex">
-                    <RiArrowRightSLine size={22} color="#AEAEB3" />
-                  </div>
+                      <div className="items-center justify-center hidden sm:flex">
+                        <RiArrowRightSLine size={22} color="#AEAEB3" />
+                      </div>
 
-                  <div className="flex flex-col">
-                    <span className={`${archivo.className} capitalize text-text-details text-xs`}>
-                      ATÉ
-                    </span>
-                    {endDate ? (
-                      <span className="text-lg font-semibold text-heading">
-                        {dateFormatter(endDate)}
-                      </span>
-                    ) : (
-                      <hr className="w-24 mt-5" />
-                    )}
-                  </div>
+                      <div className="flex flex-col">
+                        <span
+                          className={`${archivo.className} capitalize text-text-details text-xs`}
+                        >
+                          ATÉ
+                        </span>
+                        {endDate ? (
+                          <span className="text-lg font-semibold text-heading">
+                            {dateFormatter(endDate)}
+                          </span>
+                        ) : (
+                          <hr className="w-24 mt-5" />
+                        )}
+                      </div>
+                    </div>
 
-                  {/* < asChild> */}
                     <button
                       aria-controls="radix-:R29dlll6pj9:"
-                      onClick={() => setDates(startDate!, endDate!)}
+                      onClick={() => setIsCalendarOpen(true)}
                       className="flex items-center justify-center w-12 h-12 transition-all duration-300 bg-secondary hover:bg-secondary-darkened"
                     >
                       <AiOutlineCalendar color="#FFF" size="22px" />
                     </button>
-                  {/* </> */}
-                </div>
+                  </div>
+                  <div className="flex items-end justify-between">
+                    <div className="flex flex-col pt-4">
+                      <span className={`${archivo.className} capitalize text-text-details text-xs`}>
+                        TOTAL
+                      </span>
+
+                      <span className="text-lg font-semibold text-heading">
+                        {`R$ ${price} x ${rentPeriodInDays} diárias`}
+                      </span>
+                    </div>
+
+                    <span
+                      className={`${archivo.className} text-xl sm:text-4xl font-medium  text-tertiary flex`}
+                    >
+                      R${" "}
+                      {(price! * rentPeriodInDays).toLocaleString("pt-BR", {
+                        maximumFractionDigits: 2,
+                      })}
+                    </span>
+                  </div>
+                </>
               ) : (
                 <span>Selecione uma data</span>
               )}
             </TabsContent>
           </Tabs>
 
-          <Dialog>
-            {isDatesPicked ? (
-              <button className="flex items-center justify-center w-full px-20 py-5 mt-8 text-lg font-medium text-center duration-300 disabled:cursor-not-allowed disabled:opacity-70 lg:w-auto bg-tertiary text-background hover:bg-tertiary-darkened hover:transition-all">
-                Alugar agora
-              </button>
-            ) : (
+          <Dialog open={isCalendarOpen}>
+            <DialogTrigger asChild>
               <button
-                className={`flex mt-8 items-center justify-center w-full px-20 py-5 text-lg font-medium text-center duration-300 disabled:cursor-not-allowed disabled:opacity-70 lg:w-auto bg-secondary text-background hover:bg-secondary-darkened hover:transition-all`}
+                onClick={() => {
+                  if (isDatesPicked) {
+                    handleRent();
+                  } else {
+                    setIsCalendarOpen(true);
+                  }
+                }}
+                className={`
+              flex items-center justify-center w-full px-20 py-5 mt-8 text-lg font-medium text-center duration-300 disabled:cursor-not-allowed disabled:opacity-70 lg:w-auto hover:transition-all text-background 
+              ${
+                isDatesPicked
+                  ? "bg-tertiary hover:bg-tertiary-darkened"
+                  : "bg-secondary hover:bg-secondary-darkened"
+              }`}
               >
-                Escolher período do aluguel
+                {isDatesPicked ? "Alugar agora" : "Escolher período do aluguel"}
               </button>
-            )}
-
-            <DialogContent>
-              <DialogHeader>
-                <DialogTitle
-                  className={`${archivo.className} p-6 text-lg font-semibold bg-primary text-background flex`}
-                >
-                  Escolha uma data de início e fim
-                </DialogTitle>
-              </DialogHeader>
-              <Calendar onDateSelected={setSelectedDate} />
-            </DialogContent>
+            </DialogTrigger>
+            <DialogPortal>
+              <DialogOverlay onClick={() => setIsCalendarOpen(false)} />
+              <DialogContent>
+                <DialogHeader className="flex flex-row justify-between p-6 bg-primary">
+                  <DialogTitle
+                    className={`${archivo.className} text-lg font-semibold  text-background flex`}
+                  >
+                    Escolha uma data de início e fim
+                  </DialogTitle>
+                  <DialogClose
+                    onClick={() => setIsCalendarOpen(false)}
+                    className="
+                  rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 
+                  focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-secondary
+                  "
+                  >
+                    <X className="w-6 h-6 text-text-details" />
+                    <span className="sr-only">Close</span>
+                  </DialogClose>
+                </DialogHeader>
+                <Calendar onDateSelected={setSelectedDate} isCalendarOpen={isCalendarOpen} />
+              </DialogContent>
+            </DialogPortal>
           </Dialog>
         </div>
       </div>

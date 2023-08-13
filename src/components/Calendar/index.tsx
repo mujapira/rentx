@@ -1,12 +1,11 @@
 import dayjs from "dayjs";
 import { archivo } from "../../styles/fonts";
-import { useContext, useEffect, useMemo, useState } from "react";
+import { useContext, useMemo, useState } from "react";
 import { getWeekDays } from "../../utils";
 import { RiArrowRightSLine, RiArrowLeftSLine } from "react-icons/ri";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "../ui/tooltip";
 import { RentalDetailsContext } from "@/app/(client)/layout";
 import { useRouter, usePathname } from "next/navigation";
-import * as DialogPrimitive from "@radix-ui/react-dialog";
 
 interface CalendarWeek {
   week: number;
@@ -36,9 +35,10 @@ import { DialogTrigger } from "../ui/dialog";
 
 interface CalendarProps {
   onDateSelected: (date: Date) => void;
+  isCalendarOpen: boolean;
 }
 
-export function Calendar({ onDateSelected }: CalendarProps) {
+export function Calendar({ onDateSelected, isCalendarOpen }: CalendarProps) {
   const router = useRouter();
   const pathname = usePathname();
   const shortWeekDays = getWeekDays({ short: true });
@@ -54,6 +54,7 @@ export function Calendar({ onDateSelected }: CalendarProps) {
     setEndDate,
     startDate,
     isDatesPicked,
+    setIsCalendarOpen,
     endDate,
     selectedDates,
     setSelectedDates,
@@ -70,6 +71,7 @@ export function Calendar({ onDateSelected }: CalendarProps) {
     if (pathname === "/carros") {
       router.push("/carros/filtros");
     }
+    setIsCalendarOpen(false);
   }
 
   function handlePreviousMonth() {
@@ -280,13 +282,12 @@ export function Calendar({ onDateSelected }: CalendarProps) {
                       if (isCalendarStartDate || isCalendarEndDate) {
                         buttonClasses += "bg-secondary text-white ";
                       }
-                    
 
                       // console.log(
                       //   dayjs(startDate).format("YYYY-MM-DD"),
                       //   dayjs(date).format("YYYY-MM-DD")
                       // );
-                
+
                       return (
                         <td key={date.toString()} className="p-0">
                           <Tooltip>
@@ -354,23 +355,13 @@ export function Calendar({ onDateSelected }: CalendarProps) {
           </div>
         </div>
 
-        {pathname != "/carros" ? (
-          <DialogTrigger
-            onClick={handleConfirm}
-            disabled={!startDate || !endDate}
-            className="flex items-center justify-center w-full px-20 py-4 text-lg font-medium text-center duration-300 disabled:cursor-not-allowed disabled:opacity-70 lg:w-auto bg-secondary text-background hover:bg-secondary-darkened hover:transition-all"
-          >
-            Confirmar
-          </DialogTrigger>
-        ) : (
-          <button
-            onClick={handleConfirm}
-            disabled={!startDate || !endDate}
-            className="flex items-center justify-center w-full px-20 py-4 text-lg font-medium text-center duration-300 disabled:cursor-not-allowed disabled:opacity-70 lg:w-auto bg-secondary text-background hover:bg-secondary-darkened hover:transition-all"
-          >
-            Confirmar
-          </button>
-        )}
+        <button
+          onClick={handleConfirm}
+          disabled={!startDate || !endDate}
+          className="flex items-center justify-center w-full px-20 py-4 text-lg font-medium text-center duration-300 disabled:cursor-not-allowed disabled:opacity-70 lg:w-auto bg-secondary text-background hover:bg-secondary-darkened hover:transition-all"
+        >
+          Confirmar
+        </button>
       </div>
     </div>
   );
