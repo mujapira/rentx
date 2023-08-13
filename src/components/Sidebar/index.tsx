@@ -10,7 +10,7 @@ export function SideBar() {
   const pathname = usePathname();
 
   return (
-    <nav className="fixed bottom-0 flex flex-col w-full h-auto sm:h-full sm:w-20 bg-primary">
+    <nav className="fixed bottom-0 z-40 flex flex-col w-full h-auto sm:h-full sm:w-20 bg-primary">
       <Link
         href="/inicio"
         className="content-center justify-center hidden w-20 h-20 sm:flex bg-secondary"
