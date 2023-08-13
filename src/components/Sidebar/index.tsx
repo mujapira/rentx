@@ -12,7 +12,7 @@ export function SideBar() {
   return (
     <nav className="fixed bottom-0 flex flex-col w-full h-auto sm:h-full sm:w-20 bg-primary">
       <Link
-        href="/"
+        href="/inicio"
         className="content-center justify-center hidden w-20 h-20 sm:flex bg-secondary"
       >
         <Image src={Logo} alt="rentx-logo" width={30} height={20} />
@@ -22,7 +22,7 @@ export function SideBar() {
         <Link
           href="/inicio"
           className={`flex items-center justify-center h-14 max-sm:px-10 ${
-            pathname == "/inicio"
+            pathname.includes("/inicio")
               ? "bg-primary-darkened border-l border-secondary"
               : "bg-primary-primary hover:border-l border-secondary cursor-pointer"
           }`}
@@ -33,7 +33,7 @@ export function SideBar() {
         <Link
           href="/carros"
           className={`flex items-center justify-center h-14 max-sm:px-10 ${
-            (pathname == "/carros") || (pathname == "/carros/filtros")
+            pathname.includes("/carros")
               ? "bg-primary-darkened border-l border-secondary"
               : "bg-primary-primary hover:border-l border-secondary cursor-pointer"
           }`}

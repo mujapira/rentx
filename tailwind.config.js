@@ -49,7 +49,7 @@ module.exports = {
         },
         tertiary: {
           DEFAULT: "hsl(var(--tertiary))",
-          darkened: "hsl(var(--secondary-darkened))",
+          darkened: "hsl(var(--tertiary-darkened))",
         },
         destructive: {
           DEFAULT: "hsl(var(--destructive))",

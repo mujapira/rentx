@@ -48,7 +48,7 @@ export default function FilterPage() {
 
   const [openFilterSheet, setOpenFilterSheet] = useState(false);
 
-  const { setDates, startDate, endDate } = useContext(RentalDetailsContext);
+  const { setDates, startDate, endDate, isCalendarOpen } = useContext(RentalDetailsContext);
   const priceRangerDefaultValues = [500, 1000];
   const [priceRange, setPriceRange] = useState(priceRangerDefaultValues);
   const [fuelType, setFuelType] = useState("");
@@ -234,7 +234,7 @@ export default function FilterPage() {
                     Escolha uma data de início e fim
                   </DialogTitle>
                 </DialogHeader>
-                <Calendar onDateSelected={setSelectedDate} />
+                <Calendar onDateSelected={setSelectedDate} isCalendarOpen={isCalendarOpen} />
               </DialogContent>
             </Dialog>
 

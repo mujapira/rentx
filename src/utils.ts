@@ -16,6 +16,7 @@ export interface CarData {
   horsePower: number;
   seats: number;
   time: number;
+  images?: string[];
 }
 
 dayjs.locale("pt-br");
@@ -62,6 +63,11 @@ export const fakeCars: CarData[] = [
     transmission: "Automatico",
     carUrl:
       "https://firebasestorage.googleapis.com/v0/b/rentx-plm.appspot.com/o/xc40.png?alt=media&token=be98555b-c869-45da-8c06-9c68d4d4d05e",
+    images: [
+      "https://firebasestorage.googleapis.com/v0/b/rentx-plm.appspot.com/o/xc40.png?alt=media&token=be98555b-c869-45da-8c06-9c68d4d4d05e",
+      "https://firebasestorage.googleapis.com/v0/b/rentx-plm.appspot.com/o/xc40.png?alt=media&token=be98555b-c869-45da-8c06-9c68d4d4d05e",
+      "https://firebasestorage.googleapis.com/v0/b/rentx-plm.appspot.com/o/xc40.png?alt=media&token=be98555b-c869-45da-8c06-9c68d4d4d05e",
+    ],
   },
 
   {

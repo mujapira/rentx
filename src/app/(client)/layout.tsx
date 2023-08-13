@@ -18,6 +18,8 @@ interface RentalDetailsContextType {
   selectedDates?: Date[];
   setSelectedDates: (date: Date[]) => void;
   isDatesPicked: boolean;
+  isCalendarOpen: boolean;
+  setIsCalendarOpen: (isCalendarOpen: boolean) => void;
 }
 
 export const RentalDetailsContext = createContext<RentalDetailsContextType>(
@@ -29,6 +31,7 @@ export default function ClientLayout({ children }: ClientLayoutProps) {
   const [endDate, setEndDate] = useState<Date | null>(null);
   const [selectedDates, setSelectedDates] = useState<Date[]>();
   const [isDatesPicked, setIsDatesPicked] = useState<boolean>(false);
+  const [isCalendarOpen, setIsCalendarOpen] = useState<boolean>(false);
 
 
   const setDates = (newStartDate: Date, newEndDate: Date) => {
@@ -71,6 +74,8 @@ export default function ClientLayout({ children }: ClientLayoutProps) {
         <div className="ml-0 mb-14 sm:ml-20 sm:mb-0">
           <RentalDetailsContext.Provider
             value={{
+              isCalendarOpen,
+              setIsCalendarOpen,
               startDate,
               endDate,
               setEndDate,
