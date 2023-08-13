@@ -2,8 +2,10 @@ import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 import dayjs from "dayjs";
 import "dayjs/locale/pt-br";
-
+var localizedFormat = require('dayjs/plugin/localizedFormat')
+dayjs.extend(localizedFormat)
 export interface CarData {
+  id: number;
   fullName: string;
   modelName: string;
   brand: string;
@@ -17,6 +19,23 @@ export interface CarData {
   seats: number;
   time: number;
   images?: string[];
+}
+
+export interface Rent {
+  id: number;
+  startDate: string;
+  endDate: string;
+  totalPrice: number;
+  userId: number;
+  carId: number;
+}
+export interface UserData {
+  id: number;
+  fullName: string;
+  firstName: string;
+  email: string;
+  cnh: string;
+  userImageUrl: string;
 }
 
 dayjs.locale("pt-br");
@@ -48,8 +67,10 @@ export function getWeekDays({ short = false }: GetWeekDaysParams = {}) {
       return weekDay.substring(0, 1).toUpperCase().concat(weekDay.substring(1));
     });
 }
+
 export const fakeCars: CarData[] = [
   {
+    id: 1,
     fullName: "Volvo XC40",
     uniqueIdentifier: "ui-xc40",
     modelName: "XC40",
@@ -71,6 +92,7 @@ export const fakeCars: CarData[] = [
   },
 
   {
+    id: 2,
     fullName: "Chevrolet Corvette Z06",
     uniqueIdentifier: "ui-corvette-z06",
     modelName: "Corvette Z06",
@@ -87,6 +109,7 @@ export const fakeCars: CarData[] = [
   },
 
   {
+    id: 3,
     fullName: "Audi RS 5 Coupé",
     uniqueIdentifier: "ui-rs-5-coupe",
     modelName: "RS 5 Coupé",
@@ -102,6 +125,7 @@ export const fakeCars: CarData[] = [
       "https://firebasestorage.googleapis.com/v0/b/rentx-plm.appspot.com/o/r5coupe.png?alt=media&token=187cde80-c107-4bd6-a68e-dac7534bd764",
   },
   {
+    id: 4,
     fullName: "Audi Lancer Evo X",
     uniqueIdentifier: "ui-lancer-evo-x",
     modelName: "Lancer Evo X",
@@ -118,6 +142,7 @@ export const fakeCars: CarData[] = [
   },
 
   {
+    id: 5,
     fullName: "Lamborghini Huracan",
     uniqueIdentifier: "ui-huracan",
     modelName: "Huracan",
@@ -133,6 +158,7 @@ export const fakeCars: CarData[] = [
       "https://firebasestorage.googleapis.com/v0/b/rentx-plm.appspot.com/o/huracan.png?alt=media&token=70153cd0-7a73-4169-9683-7febd22fb68f",
   },
   {
+    id: 6,
     fullName: "Porche Panamera",
     uniqueIdentifier: "ui-panamera",
     modelName: "Panamera",
@@ -146,5 +172,41 @@ export const fakeCars: CarData[] = [
     transmission: "Manual",
     carUrl:
       "https://firebasestorage.googleapis.com/v0/b/rentx-plm.appspot.com/o/panamera.png?alt=media&token=4a56c04a-2c1e-444c-ac5d-3e50b32e2f7c",
+  },
+];
+
+export const userData: UserData = {
+  id: 1,
+  fullName: "Pedro José Bertelli",
+  firstName: "Pedro",
+  email: "pedro_jose@gmail.com",
+  cnh: "05624852995",
+  userImageUrl: "https://firebasestorage.googleapis.com/v0/b/rentx-plm.appspot.com/o/pedro.jpeg?alt=media&token=bfd72017-19c1-4387-8b8a-375e0229effd",
+};
+
+export const rentHistory: Rent[] = [
+  {
+    id: 1,
+    startDate: "01/08/2022",
+    endDate: "07/08/2022",
+    totalPrice: 800,
+    userId: 1,
+    carId: 1,
+  },
+  {
+    id: 2,
+    startDate: "12/01/2023",
+    endDate: "13/01/2023",
+    totalPrice: 800,
+    userId: 1,
+    carId: 2,
+  },
+  {
+    id: 3,
+    startDate: "20/07/2023",
+    endDate: "22/07/2023",
+    totalPrice: 800,
+    userId: 1,
+    carId: 3,
   },
 ];

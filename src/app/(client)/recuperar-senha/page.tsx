@@ -10,16 +10,15 @@ import { RiLock2Line, RiMailLine } from "react-icons/ri";
 import { PrimaryButton } from "@/components/PrimaryButton";
 import { useRouter } from "next/navigation";
 
-export default function Login() {
+export default function RecuperarSenha() {
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
   const router = useRouter();
 
   function handleSubmit(event: FormEvent) {
     event.preventDefault();
 
-    alert("Login efetuado com sucesso!");
-    router.push("/inicio");
+    alert("Email enviado com sucesso!");
+    router.push("/login");
   }
 
   return (
@@ -46,17 +45,16 @@ export default function Login() {
         <h1
           className={`${archivo.className} text-[44px] font-bold leading-[54px] not-italic text-heading  text-center xl:text-left`}
         >
-          Estamos quase lá.
+          Recuperar senha
         </h1>
 
         <span className="font-body text-md leading-[30px] not-italic text-text mt-3 text-center xl:text-left">
-          Faça seu login para começar uma
-          <br />
-          experiência incrível.
+          Insira seu e-mail para receber um <br />
+          link de recuperação
         </span>
 
         <form className="mt-10 w-[384px] flex flex-col" onSubmit={handleSubmit}>
-          <div className="flex flex-col gap-2">
+          <div className="flex flex-col gap-4">
             <div className="flex flex-row w-full border border-text-secondary">
               <div className="p-[23px] bg-background border-r border-text-secondary">
                 <RiMailLine color="#7A7A80" size={20} />
@@ -70,35 +68,13 @@ export default function Login() {
                 onChange={(event) => setEmail(event.target.value)}
               />
             </div>
-            <div className="flex flex-row w-full border border-text-secondary">
-              <div className="p-[23px] bg-background border-r border-text-secondary">
-                <RiLock2Line color="#7A7A80" size={20} />
-              </div>
-              <input
-                type="password"
-                name="password"
-                id="password"
-                placeholder="Senha"
-                className="p-[23px] w-full placeholder:text-text-details placeholder:text-[16px]"
-                onChange={(event) => setPassword(event.target.value)}
-              />
-            </div>
+            <PrimaryButton disabled={!email} type="submit">
+              Enviar
+            </PrimaryButton>
+            <Link href="/login" className="hover:underline">
+              voltar para login
+            </Link>
           </div>
-
-          <Link href="/recuperar-senha" className="my-6 hover:underline">
-            Esqueci minha senha
-          </Link>
-
-          <PrimaryButton disabled={!email || !password} type="submit">
-            Login
-          </PrimaryButton>
-
-          <Link
-            href={"/cadastro"}
-            className="flex items-center justify-center px-20 py-5 mt-4 font-medium transition-all duration-200 border-2 border-text-label text-primary-heading hover:border-secondary"
-          >
-            Criar conta gratuita
-          </Link>
         </form>
       </div>
     </main>

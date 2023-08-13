@@ -33,6 +33,7 @@ export default function ClientLayout({ children }: ClientLayoutProps) {
   const [isDatesPicked, setIsDatesPicked] = useState<boolean>(false);
   const [isCalendarOpen, setIsCalendarOpen] = useState<boolean>(false);
 
+
   const setDates = (newStartDate: Date, newEndDate: Date) => {
     setStartDate(newStartDate);
     setEndDate(newEndDate);

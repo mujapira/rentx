@@ -32,7 +32,12 @@ export default function Loading() {
               <Skeleton className="flex items-center justify-center w-full h-full max-w-[470px] max-h-[325px]">
                 <div className="w-[470px] h-[75px] 2xl:h-[325px]"></div>
               </Skeleton>
-            
+              <Skeleton className="flex items-center justify-center w-full h-full max-w-[470px] max-h-[325px]">
+                <div className="w-[470px] h-[75px] 2xl:h-[325px]"></div>
+              </Skeleton>
+              <Skeleton className="flex items-center justify-center w-full h-full max-w-[470px] max-h-[325px]">
+                <div className="w-[470px] h-[75px] 2xl:h-[325px]"></div>
+              </Skeleton>
             </div>
           </>
         </div>
