@@ -110,20 +110,23 @@ export default function SelecionarCarro({
 
   return (
     <div className="h-full min-h-[calc(100vh-80px)] px-4 xl:px-[116px]">
-      <div className="flex items-center justify-start gap-6 pb-6 border-b sm:gap-11 border-text-secondary">
-        <Link href="/inicio">
-          <RiArrowLeftSLine className="text-3xl text-text" />
-        </Link>
+      <div className="flex flex-col items-start justify-start gap-6 pb-6 border-b sm:items-center sm:flex-row sm:gap-11 border-text-secondary">
+        <div className="flex items-center justify-start gap-6">
+          <Link href="/inicio">
+            <RiArrowLeftSLine className="text-3xl text-text" />
+          </Link>
 
-        <div className="flex flex-col items-start justify-center whitespace-nowrap">
-          <span className={`${archivo.className} font-medium text-sm text-text-details uppercase`}>
-            {brand}
-          </span>
-          <span className={` ${archivo.className} font-bold text-heading text-4xl truncate`}>
-            {modelName}
-          </span>
+          <div className="flex flex-col items-start justify-center whitespace-nowrap">
+            <span
+              className={`${archivo.className} font-medium text-sm text-text-details uppercase`}
+            >
+              {brand}
+            </span>
+            <span className={` ${archivo.className} font-bold text-heading text-4xl truncate`}>
+              {modelName}
+            </span>
+          </div>
         </div>
-
         <div className="flex flex-col items-start justify-center whitespace-nowrap">
           <span className={`${archivo.className} font-medium text-sm text-text-details uppercase`}>
             AO DIA
