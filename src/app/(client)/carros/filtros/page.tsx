@@ -42,7 +42,7 @@ interface FormData {
 }
 
 export default function FilterPage() {
-  const [filterResults, setFilterResults] = useState<CarData[]>([]);
+  const [filterResults, setFilterResults] = useState<CarData[]>(fakeCars);
   const [searchInputResults, setSearchInputResults] = useState<CarData[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [isSearchFocused, setSearchFocused] = useState(false);

@@ -89,7 +89,7 @@ export function Calendar({ onDateSelected, isCalendarOpen }: CalendarProps) {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const blockedDates: BlockedDates = {
     blockedWeekDays: [0], // Domingo (0) bloqueado
-    blockedDates: [15], // Exemplo de dias bloqueados
+    blockedDates: [], // Exemplo de dias bloqueados
   };
 
   const calendarWeeks = useMemo(() => {
