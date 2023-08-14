@@ -10,8 +10,8 @@ export function Topbar() {
       </Link>
 
       <div className="flex flex-row items-center gap-4">
-        <Link href="" className="text-base font-semibold">Faça login</Link>
-        <Link href="./perfil" className="flex items-center justify-center w-12 rounded-full bg-text-secondary aspect-square">
+        <Link href="/login" className="text-base font-semibold">Faça login</Link>
+        <Link href="/perfil" className="flex items-center justify-center w-12 rounded-full bg-text-secondary aspect-square">
           <RiUser6Line size="24" className="font-normal text-text"/>
         </Link>
       </div>
