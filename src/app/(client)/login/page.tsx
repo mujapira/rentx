@@ -23,8 +23,8 @@ export default function Login() {
   }
 
   return (
-    <main className="flex items-center  min-h-screen mt-[-80px] px-2 xl:px-40 bg-background-darkened">
-      <div className="relative w-1/2 h-[613px] max-w-2xl hidden xl:flex justify-center">
+    <main className="flex pt-8  items-start xl:items-center justify-center min-h-screen mt-[-80px] px-2 xl:px-40 bg-background-darkened">
+      <div className="relative w-auto xl:w-1/2 h-[613px] max-w-2xl hidden xl:flex justify-center">
         <Image
           className="absolute z-0 max-w-2xl inset-center"
           objectPosition="center"
@@ -42,9 +42,10 @@ export default function Login() {
           alt="Picture of the author"
         />
       </div>
-      <div className="flex flex-col items-center ml-[136px] justify-start w-1/2 xl:items-start ">
+      
+      <div className="flex flex-col items-center ml-0 xl:ml-[136px] justify-start w-auto xl:w-1/2 xl:items-start ">
         <h1
-          className={`${archivo.className} text-[44px] font-bold leading-[54px] not-italic text-heading  text-center xl:text-left`}
+          className={`${archivo.className} text-4xl font-bold leading-[54px] not-italic text-heading  text-center xl:text-left`}
         >
           Estamos quase lá.
         </h1>
@@ -55,7 +56,7 @@ export default function Login() {
           experiência incrível.
         </span>
 
-        <form className="mt-10 w-[384px] flex flex-col" onSubmit={handleSubmit}>
+        <form className="mt-10 w-full max-w-[400px] flex flex-col" onSubmit={handleSubmit}>
           <div className="flex flex-col gap-2">
             <div className="flex flex-row w-full border border-text-secondary">
               <div className="p-[23px] bg-background border-r border-text-secondary">
@@ -85,7 +86,7 @@ export default function Login() {
             </div>
           </div>
 
-          <Link href="/recuperar-senha" className="my-6 hover:underline">
+          <Link href="/recuperar-senha" className="w-full my-6 hover:underline">
             Esqueci minha senha
           </Link>
 
@@ -95,7 +96,7 @@ export default function Login() {
 
           <Link
             href={"/cadastro"}
-            className="flex items-center justify-center px-20 py-5 mt-4 font-medium transition-all duration-200 border-2 border-text-label text-primary-heading hover:border-secondary"
+            className="flex items-center justify-center py-5 mt-4 font-medium transition-all duration-200 border-2 border-text-label text-primary-heading hover:border-secondary"
           >
             Criar conta gratuita
           </Link>

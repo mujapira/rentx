@@ -12,7 +12,7 @@ export default function Home() {
         <Image src={Logo} width={200} height={22} alt="Picture of the author" />
 
         <h1
-          className={`${archivo.className} text-[54px] font-semibold leading-[54px] not-italic text-background mt-28 text-center xl:text-left`}
+          className={`${archivo.className} text-4xl leading-[46px] sm:text-[54px] font-semibold sm:leading-[54px] not-italic text-background mt-28 text-center xl:text-left`}
         >
           Alugue um
           <br />
