@@ -28,6 +28,7 @@ RentX
 
 <img src="https://github.com/mujapira/rentx/assets/89225210/dab73c3d-2e90-4498-9f8a-accc20a1c4e6"/>
 <img src="https://github.com/mujapira/rentx/assets/89225210/403c192a-c2dd-45fe-8b8d-83cc5cfebd77"/>
+<img src="https://github.com/mujapira/rentx/assets/89225210/7ce0a1b1-1e9b-433f-acb3-1e2f87cb6bb7"/>
 
 </h4>
 
